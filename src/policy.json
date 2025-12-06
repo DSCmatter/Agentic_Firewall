@@ -1,0 +1,21 @@
+{
+  "allow_list": [
+    "read_file",
+    "list_directory",
+    "write_file",
+    "search_files",
+    "get_file_info"
+  ],
+  "arg_constraints": {
+    "read_file": {
+      "path": "SANDBOX:D:/Coding"
+    },
+    "write_file": {
+      "path": "SANDBOX:D:/Coding"
+    },
+    "list_directory": {
+      "path": "SANDBOX:D:/Coding"
+    }
+  },
+  "deny_behavior": "block_and_log"
+}

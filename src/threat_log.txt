@@ -1,0 +1,6 @@
+[ALLOWED] Tool: list_directory | Args: {"path": "D:/Coding"}
+[ALLOWED] Tool: list_directory | Args: {"path": "D:/Coding"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding/newdir"}
+[BLOCKED] Path 'D:/Coding/../../secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:/Coding/../../secrets.txt"}
+[BLOCKED] Path 'C:/Windows' is outside sandbox 'D:\Coding' | Tool: list_directory | Args: {"path": "C:/Windows"}
+[BLOCKED] Path 'C:/' is outside sandbox 'D:\Coding' | Tool: list_directory | Args: {"path": "C:/"}
