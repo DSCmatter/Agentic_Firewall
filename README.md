@@ -2,7 +2,11 @@
 
 **An MCP Security Gateway for Claude Desktop**
 
+Inspired from [Anthropic Research](https://www.anthropic.com/news/disrupting-AI-espionage)
+
 Agentic Firewall is a lightweight security wrapper that intercepts and validates Model Context Protocol (MCP) tool calls, providing enterprise-grade access control for AI agents like Claude.
+
+Here, we have utilized only filesystem, in the future we will also utilize the weather api as experiment and so on...
 
 ---
 
