@@ -4,3 +4,1529 @@
 [BLOCKED] Path 'D:/Coding/../../secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:/Coding/../../secrets.txt"}
 [BLOCKED] Path 'C:/Windows' is outside sandbox 'D:\Coding' | Tool: list_directory | Args: {"path": "C:/Windows"}
 [BLOCKED] Path 'C:/' is outside sandbox 'D:\Coding' | Tool: list_directory | Args: {"path": "C:/"}
+[INFO] Wrapper shutting down
+[BLOCKED] Path '/D/Coding' is outside sandbox 'D:\Coding' | Tool: list_directory | Args: {"path": "/D/Coding"}
+[ALLOWED] Tool: list_directory | Args: {"path": "D:/Coding"}
+[ALLOWED] Tool: list_directory | Args: {"path": "D:/Coding/MyRedis"}
+[ALLOWED] Tool: get_file_info | Args: {"path": "D:/Coding/MyRedis/main.go"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:/Coding/MyRedis/main.go"}
+[ALLOWED] Tool: write_file | Args: {"path": "D:/Coding/MyRedis/main.go", "content": "package main\n\nimport (\n\t\"fmt\"\n)\n\nfunc main() {\n\tfmt.Println(\"Hello world!\")\n\tfmt.Println(\"Byebye\")\n}\n"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:/Coding/MyRedis/main.go"}
+[ALLOWED] Tool: list_directory | Args: {}
+[ERROR] Exception in handle_server_output: [Errno 22] Invalid argument
+[ERROR] Exception in handle_server_output: [Errno 22] Invalid argument
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}
+[ALLOWED] Tool: read_file | Args: {"path": "D:\\Coding\\threat_log.txt"}
+[BLOCKED] Tool 'create_directory' is not in allow_list | Tool: create_directory | Args: {"path": "D:/Coding\\newdir"}
+[BLOCKED] Path 'D:\secrets.txt' is outside sandbox 'D:\Coding' | Tool: read_file | Args: {"path": "D:\\secrets.txt"}

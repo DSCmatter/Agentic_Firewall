@@ -1,0 +1,155 @@
+[
+  {
+    "timestamp": "2026-04-05T05:51:45",
+    "mode": "direct",
+    "iterations": 500,
+    "warmup": 5,
+    "governor_path": "D:\\Coding\\Agentic_Firewall\\src\\mcp_governor.py",
+    "sandbox_path": "D:/Coding",
+    "overall": {
+      "label": "direct::overall",
+      "count": 1500,
+      "total_seconds": 0.0021025999885750934,
+      "throughput_rps": 713402.4579808601,
+      "min_ms": 0.0,
+      "max_ms": 0.010400006431154907,
+      "mean_ms": 0.001126733230194077,
+      "median_ms": 0.0015999976312741637,
+      "p50_ms": 0.0015999976312741637,
+      "p95_ms": 0.001700012944638729,
+      "p99_ms": 0.0019999862706754357
+    },
+    "cases": {
+      "allowed_read_file": {
+        "label": "direct::allowed_read_file",
+        "count": 500,
+        "total_seconds": 0.0021025999885750934,
+        "throughput_rps": 237800.81932695335,
+        "min_ms": 0.0014999968698248267,
+        "max_ms": 0.010400006431154907,
+        "mean_ms": 0.0016813998227007687,
+        "median_ms": 0.001600012183189392,
+        "p50_ms": 0.001600012183189392,
+        "p95_ms": 0.0017999991541728377,
+        "p99_ms": 0.0021020014537498338
+      },
+      "blocked_tool": {
+        "label": "direct::blocked_tool",
+        "count": 500,
+        "total_seconds": 0.0021025999885750934,
+        "throughput_rps": 237800.81932695335,
+        "min_ms": 0.0,
+        "max_ms": 0.00039998849388211966,
+        "mean_ms": 9.020001743920147e-05,
+        "median_ms": 0.000100000761449337,
+        "p50_ms": 0.000100000761449337,
+        "p95_ms": 0.000100000761449337,
+        "p99_ms": 0.000100000761449337
+      },
+      "blocked_traversal": {
+        "label": "direct::blocked_traversal",
+        "count": 500,
+        "total_seconds": 0.0021025999885750934,
+        "throughput_rps": 237800.81932695335,
+        "min_ms": 0.0014999968698248267,
+        "max_ms": 0.005800000508315861,
+        "mean_ms": 0.0016085998504422605,
+        "median_ms": 0.0015999976312741637,
+        "p50_ms": 0.0015999976312741637,
+        "p95_ms": 0.0016999983927235007,
+        "p99_ms": 0.0022020020696800185
+      }
+    },
+    "outcomes": {
+      "allowed_read_file": {
+        "allowed": 500,
+        "blocked": 0
+      },
+      "blocked_tool": {
+        "allowed": 0,
+        "blocked": 500
+      },
+      "blocked_traversal": {
+        "allowed": 0,
+        "blocked": 500
+      }
+    }
+  },
+  {
+    "timestamp": "2026-04-05T05:51:45",
+    "mode": "subprocess",
+    "iterations": 500,
+    "warmup": 5,
+    "governor_path": "D:\\Coding\\Agentic_Firewall\\src\\mcp_governor.py",
+    "sandbox_path": "D:/Coding",
+    "startup_wait_s": 2.0,
+    "overall": {
+      "label": "subprocess::overall",
+      "count": 1500,
+      "total_seconds": 1.1329286000109278,
+      "throughput_rps": 1324.0022363152732,
+      "min_ms": 0.2677999873412773,
+      "max_ms": 5.419399996753782,
+      "mean_ms": 0.7502124002106333,
+      "median_ms": 0.3946999931940809,
+      "p50_ms": 0.3946999931940809,
+      "p95_ms": 1.7177800102217589,
+      "p99_ms": 1.9698230089852584
+    },
+    "cases": {
+      "allowed_read_file": {
+        "label": "subprocess::allowed_read_file",
+        "count": 500,
+        "total_seconds": 1.1329286000109278,
+        "throughput_rps": 441.33407877175773,
+        "min_ms": 1.118899992434308,
+        "max_ms": 5.419399996753782,
+        "mean_ms": 1.5186689996917266,
+        "median_ms": 1.4733499992871657,
+        "p50_ms": 1.4733499992871657,
+        "p95_ms": 1.8991599965374917,
+        "p99_ms": 2.164106991403969
+      },
+      "blocked_tool": {
+        "label": "subprocess::blocked_tool",
+        "count": 500,
+        "total_seconds": 1.1329286000109278,
+        "throughput_rps": 441.33407877175773,
+        "min_ms": 0.27809999301098287,
+        "max_ms": 0.7412999984808266,
+        "mean_ms": 0.38864980050129816,
+        "median_ms": 0.37710000469814986,
+        "p50_ms": 0.37710000469814986,
+        "p95_ms": 0.504339998587966,
+        "p99_ms": 0.637356992374407
+      },
+      "blocked_traversal": {
+        "label": "subprocess::blocked_traversal",
+        "count": 500,
+        "total_seconds": 1.1329286000109278,
+        "throughput_rps": 441.33407877175773,
+        "min_ms": 0.2677999873412773,
+        "max_ms": 4.923100001178682,
+        "mean_ms": 0.34331840043887496,
+        "median_ms": 0.3251000016462058,
+        "p50_ms": 0.3251000016462058,
+        "p95_ms": 0.4257150103512686,
+        "p99_ms": 0.516004998644348
+      }
+    },
+    "outcomes": {
+      "allowed_read_file": {
+        "allowed": 500,
+        "blocked": 0
+      },
+      "blocked_tool": {
+        "allowed": 0,
+        "blocked": 500
+      },
+      "blocked_traversal": {
+        "allowed": 0,
+        "blocked": 500
+      }
+    }
+  }
+]
