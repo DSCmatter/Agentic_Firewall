@@ -1,13 +1,26 @@
 # Agentic Firewall
+**A Security Gateway for AI Model Context Protocol (MCP) Interactions**
 
-**An MCP Security Gateway for Claude Desktop**
+Inspired by [Anthropic's Security Research](https://www.anthropic.com/news/disrupting-AI-espionage)
 
-Inspired from [Anthropic Research](https://www.anthropic.com/news/disrupting-AI-espionage)
+## The Problem
 
-Agentic Firewall is a lightweight security wrapper that intercepts and validates Model Context Protocol (MCP) tool calls, providing access control for AI agents like Claude.
+Recent security research revealed a critical vulnerability in AI coding environments: autonomous AI agents can be compromised when they're allowed to connect to unverified tools and execute thousands of requests without human oversight. The attack succeeded because there was no "human-in-the-loop" to verify intent before execution.
 
-Here, we have utilized only filesystem, in the future we will also utilize the weather api as experiment and so on...
+## The Solution
 
+What if we could prevent these attacks with a governance layer that acts as a security checkpoint?
+
+Agentic Firewall is a lightweight security wrapper that intercepts and validates Model Context Protocol (MCP) tool calls before they reach AI agents like Claude. Think of it as a firewall for your AI coding environment—providing granular access control and visibility into what your AI agents are doing.
+
+## Current Implementation
+
+This project currently implements filesystem protection as a proof of concept. Future releases will expand to other MCP capabilities including weather APIs and additional tool integrations, demonstrating how the security model scales across different domains.
+
+## Why This Matters?
+  In an era where AI agents are becoming increasingly autonomous, security can't be an afterthought. Agentic Firewall provides the governance layer needed to safely leverage AI assistance without sacrificing control over your development environment.
+
+  
 ---
 
 ## Features
