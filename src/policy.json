@@ -17,5 +17,10 @@
       "path": "SANDBOX:D:/Coding"
     }
   },
-  "deny_behavior": "block_and_log"
+  "deny_behavior": "block_and_log",
+  "server": {
+    "command": "C:/Program Files/nodejs/npx.cmd",
+    "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+    "sandbox_root": "D:/Coding"
+  }
 }
