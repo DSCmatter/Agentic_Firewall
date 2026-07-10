@@ -21,7 +21,7 @@ flowchart TD
     Gateway -->|6. Pinned Session Verification| Gateway
     Gateway -->|7. Pydantic Policy Matcher| Gateway
     
-    Gateway -->|8. POST /message (If Allowed)| Backend
+    Gateway -->|8. POST /message if allowed| Backend
     Backend -->|9. Returns execution output| Gateway
     Gateway -->|10. Output Guard Canary Scan| Gateway
     Gateway -->|11. Yields Clean Output| Client
