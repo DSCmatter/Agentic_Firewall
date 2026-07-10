@@ -37,7 +37,7 @@ The gateway acts as an intercepting proxy between the MCP Client (Agent) and the
 ┌────────────────────────────────────────────────────────────────┐
 │                    MCP Client (AI Agent)                       │
 └───────────┬──────────────────────────────────────▲────────────┘
-            │  1. HTTP/SSE or WebSocket connection   │ 4. Events / Responses
+            │  1. HTTP/SSE or WebSocket connection │ 4. Events / Responses
             ▼                                      │
 ┌───────────────────────────────────────────────────────────────┐
 │                      POLICY GATEWAY                           │
@@ -52,7 +52,7 @@ The gateway acts as an intercepting proxy between the MCP Client (Agent) and the
 │                         ↓ AUDIT LOG ↓                         │
 │              src/gateway/gateway_audit.log (JSONL)            │
 └───────────┬──────────────────────────────────────▲────────────┘
-            │  2. Local Subprocess Stdio (stdin)    │ 3. Stdout / SSE events
+            │  2. Local Subprocess Stdio (stdin)   │ 3. Stdout / SSE events
             │     or Remote SSE GET /sse           │
             ▼                                      │
 ┌────────────────────────────────────────────────────────────────┐
@@ -230,38 +230,117 @@ The official **MCP Inspector** acts as a web client UI over SSE to view and trig
    * Call `read_file` with path `src/gateway/policy_v2.json` to verify successful execution.
    * Call `read_file` with path `/etc/passwd` to observe the immediate `ARG_CONSTRAINT_VIOLATION` security block.
 
----
-
 ### Option C: Local Stdio Subprocess Proxying
-You can run the gateway to spawn the backend MCP server directly as a local subprocess via `stdin`/`stdout` pipes:
+This mode spawns the backend MCP server as a local subprocess, communicating directly via `stdin`/`stdout` pipes.
 
-1. **Start Gateway Server with subprocess spawning**:
+> [!NOTE]
+> Since the gateway communicates with the subprocess via stdio pipes, the command target must be a valid stdio-based MCP JSON-RPC server (not an HTTP/SSE app like `toy_server.py`).
+
+1. **Create Stdio Test Server (`stdio_server.py`)** in your project root:
+   ```python
+   # stdio_server.py
+   import sys
+   import json
+
+   for line in sys.stdin:
+       line = line.strip()
+       if not line:
+           continue
+       try:
+           msg = json.loads(line)
+       except Exception:
+           continue
+       msg_id = msg.get("id")
+       method = msg.get("method")
+       
+       if method == "tools/list":
+           resp = {
+               "jsonrpc": "2.0",
+               "id": msg_id,
+               "result": {
+                   "tools": [
+                       {"name": "read_file", "description": "Read file content"},
+                       {"name": "execute_command", "description": "Run shell command"}
+                   ]
+               }
+           }
+       elif method == "tools/call":
+           tool_name = msg["params"]["name"]
+           args = msg["params"].get("arguments", {})
+           path = args.get("path", "")
+           resp = {
+               "jsonrpc": "2.0",
+               "id": msg_id,
+               "result": {
+                   "content": [{"type": "text", "text": f"Successfully executed {tool_name} with path: {path}"}]
+               }
+           }
+       else:
+           resp = {"jsonrpc": "2.0", "id": msg_id, "result": {}}
+           
+       sys.stdout.write(json.dumps(resp) + "\n")
+       sys.stdout.flush()
+   ```
+
+2. **Start Gateway Server (spawning the stdio subprocess)**:
    * *PowerShell*:
      ```powershell
      $env:PYTHONPATH=".;src"
-     $env:FW_REAL_SERVER_CMD='["uv", "run", "python", "-m", "src.toy_server.toy_server"]'
+     $env:FW_REAL_SERVER_CMD='["python", "stdio_server.py"]'
      uv run uvicorn src.gateway.mcp_gateway:app --port 8001
      ```
    * *Git Bash*:
      ```bash
-     PYTHONPATH=".;src" FW_REAL_SERVER_CMD='["uv", "run", "python", "-m", "src.toy_server.toy_server"]' uv run uvicorn src.gateway.mcp_gateway:app --port 8001
+     PYTHONPATH=".;src" FW_REAL_SERVER_CMD='["python", "stdio_server.py"]' uv run uvicorn src.gateway.mcp_gateway:app --port 8001
      ```
-2. **Verify Process Lifecycle**:
-   * Connect an SSE or WebSocket client. The gateway spawns the command as a subprocess, pipes inputs to `stdin`, reads outputs from `stdout` (running filtering and output guard checks), and automatically terminates/kills the subprocess when the client disconnects.
 
 ---
 
 ### Option D: Bidirectional WebSocket Client Connection
-You can interface with the gateway over full-duplex WebSockets instead of SSE:
+You can test the entire pipeline (Gateway policy filters + Stdio subprocess execution) over full-duplex WebSockets:
 
 1. **Connect via WebSocket client (e.g. `wscat`)**:
    ```bash
    npx wscat -c "ws://127.0.0.1:8001/ws?identity=alice&session_id=session_ws"
    ```
-2. **Send JSON-RPC Frame**:
+   *Expected connection response:*
+   ```text
+   Connected (press CTRL+C to quit)
+   < event: endpoint
+   data: /message?session_id=session_ws&identity=alice
+   ```
+
+2. **Test 1: Request tool list (Filters out `execute_command` for identity `alice`)**:
+   Send:
    ```json
    {"jsonrpc": "2.0", "id": 1, "method": "tools/list"}
    ```
-   * Receive the filtered tools list immediately over the WebSocket connection.
+   *Response from Gateway (showing filtered tools list):*
+   ```json
+   < event: message
+   data: {"jsonrpc": "2.0", "id": 1, "result": {"tools": [{"name": "read_file", "description": "Read file content"}]}}
+   ```
+
+3. **Test 2: Call Allowed Tool**:
+   Send:
+   ```json
+   {"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": "read_file", "arguments": {"path": "src/gateway/policy_v2.json"}}}
+   ```
+   *Response from Gateway (execution proxies through subprocess successfully):*
+   ```json
+   < event: message
+   data: {"jsonrpc": "2.0", "id": 2, "result": {"content": [{"type": "text", "text": "Successfully executed read_file with path: src/gateway/policy_v2.json"}]}}
+   ```
+
+4. **Test 3: Sandbox Traversal Attempt (Blocked by Policy Engine)**:
+   Send:
+   ```json
+   {"jsonrpc": "2.0", "id": 3, "method": "tools/call", "params": {"name": "read_file", "arguments": {"path": "C:\\Windows\\win.ini"}}}
+   ```
+   *Response from Gateway (intercepted and blocked before reaching subprocess):*
+   ```json
+   < event: message
+   data: {"jsonrpc": "2.0", "id": 3, "error": {"code": -32602, "message": "Security Policy Violation: Path 'C:\\Windows\\win.ini' is outside sandbox 'D:/Coding'"}}
+   ```
 
 
