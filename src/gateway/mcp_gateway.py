@@ -3,9 +3,10 @@ import json
 import uuid
 import datetime
 import asyncio
+import shlex
 from contextlib import asynccontextmanager
 from typing import Dict, Any, List, Optional
-from fastapi import FastAPI, Request, Response, HTTPException, Query, Header
+from fastapi import FastAPI, Request, Response, HTTPException, Query, Header, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse
 import httpx
 
@@ -20,6 +21,17 @@ LOG_PATH = os.path.join(SCRIPT_DIR, "threat_log.txt")
 
 # Configuration
 REAL_SERVER_URL = os.environ.get("FW_REAL_SERVER_URL", "").strip()
+
+def get_real_server_cmd() -> Optional[List[str]]:
+    cmd_str = os.environ.get("FW_REAL_SERVER_CMD", "").strip()
+    if not cmd_str:
+        return None
+    if cmd_str.startswith("[") and cmd_str.endswith("]"):
+        try:
+            return json.loads(cmd_str)
+        except Exception:
+            pass
+    return shlex.split(cmd_str)
 
 # Circuit Breaker
 class CircuitBreaker:
@@ -48,6 +60,7 @@ class SessionManager:
         self.queues: Dict[str, asyncio.Queue] = {}
         self.identities: Dict[str, str] = {}
         self.backend_urls: Dict[str, str] = {}
+        self.processes: Dict[str, asyncio.subprocess.Process] = {}
 
     def create_session(self, session_id: str, identity: str) -> asyncio.Queue:
         q = asyncio.Queue()
@@ -65,6 +78,18 @@ class SessionManager:
         self.queues.pop(session_id, None)
         self.identities.pop(session_id, None)
         self.backend_urls.pop(session_id, None)
+        proc = self.processes.pop(session_id, None)
+        if proc:
+            async def terminate_proc():
+                try:
+                    proc.terminate()
+                    await proc.wait()
+                except Exception:
+                    try:
+                        proc.kill()
+                    except Exception:
+                        pass
+            asyncio.create_task(terminate_proc())
 
 session_manager = SessionManager()
 
@@ -118,6 +143,107 @@ async def lifespan(app: FastAPI):
 
 # FastAPI App
 app = FastAPI(title="MCP Policy Gateway", version="2.0.0", lifespan=lifespan)
+
+async def log_proc_stderr(proc: asyncio.subprocess.Process):
+    try:
+        while True:
+            line = await proc.stderr.readline()
+            if not line:
+                break
+            err_str = line.decode().strip()
+            if err_str:
+                print(f"[Backend Stderr]: {err_str}")
+    except Exception:
+        pass
+
+async def listen_to_stdio_backend(session_id: str, identity: str, proc: asyncio.subprocess.Process):
+    try:
+        while True:
+            line = await proc.stdout.readline()
+            if not line:
+                break
+            line_str = line.decode().strip()
+            if not line_str:
+                continue
+
+            try:
+                msg = json.loads(line_str)
+            except Exception:
+                q = session_manager.get_queue(session_id)
+                if q:
+                    await q.put(line_str)
+                continue
+
+            msg_id = msg.get("id")
+
+            # Intercept tools/list response to filter allowed tools
+            if isinstance(msg.get("result"), dict) and msg["result"].get("tools"):
+                policy_engine.policy = load_policy()
+                tool_policy = policy_engine.policy.identities.get(identity)
+                allowed = set(tool_policy.allowed_tools) if tool_policy else set()
+                filtered = [t for t in msg["result"]["tools"] if t.get("name") in allowed]
+                msg["result"]["tools"] = filtered
+                line_str = json.dumps(msg)
+
+            # Intercept tools/call response
+            is_tool_result = (
+                isinstance(msg.get("id"), (str, int))
+                and isinstance(msg.get("result"), dict)
+                and (
+                    "content" in msg["result"]
+                    or "structuredContent" in msg["result"]
+                    or "text" in msg["result"]
+                )
+            )
+
+            if is_tool_result:
+                text_blob = extract_text_from_result(msg["result"])
+                reason_codes, snippets = scan_output_text(text_blob)
+
+                if reason_codes:
+                    suspended = circuit_breaker.record_flag(session_id)
+
+                    with open(LOG_PATH, "a") as log:
+                        log.write(
+                            f"[OUTPUT_RISK] mode=block codes={reason_codes} snippets={snippets} session={session_id}\n"
+                        )
+
+                    log_audit_event(
+                        identity=identity,
+                        session_id=session_id,
+                        tool="PROXIED_TOOL_RESPONSE",
+                        args=None,
+                        decision="block" if suspended else "flag",
+                        reason=f"Suspicious tool output blocked: {reason_codes}",
+                        reason_codes=reason_codes,
+                        risk_score=0.8
+                    )
+
+                    blocked_msg = {
+                        "jsonrpc": "2.0",
+                        "id": msg_id,
+                        "error": {
+                            "code": -32603,
+                            "message": "Security Policy Violation: Suspicious tool output blocked"
+                        }
+                    }
+                    line_str = json.dumps(blocked_msg)
+                else:
+                    log_audit_event(
+                        identity=identity,
+                        session_id=session_id,
+                        tool="PROXIED_TOOL_RESPONSE",
+                        args=None,
+                        decision="allow",
+                        risk_score=0.0
+                    )
+                    line_str = json.dumps(msg)
+
+            q = session_manager.get_queue(session_id)
+            if q:
+                await q.put(line_str)
+    except Exception as e:
+        print(f"Error in stdio backend listener: {e}")
 
 async def listen_to_backend_stream(session_id: str, identity: str, response: httpx.Response):
     try:
@@ -234,9 +360,36 @@ async def sse_endpoint(
         
         # Send initial message endpoint to client
         yield f"event: endpoint\ndata: /message?session_id={session_id}&identity={identity}\n\n"
-        
+        cmd = get_real_server_cmd()
         backend_task = None
-        if REAL_SERVER_URL and http_client:
+        stderr_task = None
+
+        if cmd:
+            try:
+                proc = await asyncio.create_subprocess_exec(
+                    *cmd,
+                    stdin=asyncio.subprocess.PIPE,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE
+                )
+                session_manager.processes[session_id] = proc
+                backend_task = asyncio.create_task(
+                    listen_to_stdio_backend(session_id, identity, proc)
+                )
+                stderr_task = asyncio.create_task(
+                    log_proc_stderr(proc)
+                )
+            except Exception as e:
+                print(f"Error starting stdio backend command: {e}")
+                err = {
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32099,
+                        "message": f"Starting stdio backend process failed: {e}"
+                    }
+                }
+                yield f"event: message\ndata: {json.dumps(err)}\n\n"
+        elif REAL_SERVER_URL and http_client:
             try:
                 req = http_client.build_request("GET", f"{REAL_SERVER_URL}/sse?session_id={session_id}")
                 response = await http_client.send(req, stream=True)
@@ -266,6 +419,8 @@ async def sse_endpoint(
         finally:
             if backend_task:
                 backend_task.cancel()
+            if stderr_task:
+                stderr_task.cancel()
             session_manager.remove_session(session_id)
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
@@ -373,8 +528,29 @@ async def post_message(
                 await q.put(json.dumps(err_resp))
             return Response(status_code=202)
 
-    # 3. Forward to backend if REAL_SERVER_URL is configured
-    if REAL_SERVER_URL:
+    # 3. Forward to backend if subprocess or REAL_SERVER_URL is configured
+    proc = session_manager.processes.get(session_id)
+    if proc:
+        async def forward_to_stdio():
+            try:
+                proc.stdin.write(json.dumps(message).encode() + b"\n")
+                await proc.stdin.drain()
+            except Exception as e:
+                err_resp = {
+                    "jsonrpc": "2.0",
+                    "id": msg_id,
+                    "error": {
+                        "code": -32099,
+                        "message": f"Error writing to stdio backend process: {e}"
+                    }
+                }
+                q = session_manager.get_queue(session_id)
+                if q:
+                    await q.put(json.dumps(err_resp))
+        asyncio.create_task(forward_to_stdio())
+        return Response(status_code=202)
+
+    elif REAL_SERVER_URL:
         # Wait up to 2 seconds for backend session to establish
         for _ in range(20):
             backend_url = session_manager.backend_urls.get(session_id)
@@ -539,3 +715,284 @@ async def mock_execute_tool(session_id: str, identity: str, msg_id: Any, tool_na
     q = session_manager.get_queue(session_id)
     if q:
         await q.put(json.dumps(resp))
+
+@app.websocket("/ws")
+async def websocket_endpoint(
+    websocket: WebSocket,
+    identity: str = Query("anonymous"),
+    session_id: Optional[str] = Query(None)
+):
+    if not session_id:
+        session_id = str(uuid.uuid4())
+
+    await websocket.accept()
+
+    queue = session_manager.create_session(session_id, identity)
+    
+    # Send initial message endpoint info
+    await websocket.send_text(f"event: endpoint\ndata: /message?session_id={session_id}&identity={identity}\n\n")
+
+    cmd = get_real_server_cmd()
+    backend_task = None
+    stderr_task = None
+
+    if cmd:
+        try:
+            proc = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdin=asyncio.subprocess.PIPE,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            session_manager.processes[session_id] = proc
+            backend_task = asyncio.create_task(
+                listen_to_stdio_backend(session_id, identity, proc)
+            )
+            stderr_task = asyncio.create_task(
+                log_proc_stderr(proc)
+            )
+        except Exception as e:
+            print(f"Error starting stdio backend command: {e}")
+            err = {
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32099,
+                    "message": f"Starting stdio backend process failed: {e}"
+                }
+            }
+            await websocket.send_text(f"event: message\ndata: {json.dumps(err)}\n\n")
+    elif REAL_SERVER_URL and http_client:
+        try:
+            req = http_client.build_request("GET", f"{REAL_SERVER_URL}/sse?session_id={session_id}")
+            response = await http_client.send(req, stream=True)
+            backend_task = asyncio.create_task(
+                listen_to_backend_stream(session_id, identity, response)
+            )
+        except Exception as e:
+            print(f"Error connecting to backend MCP: {e}")
+            err = {
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32099,
+                    "message": f"Connection to backend server failed: {e}"
+                }
+            }
+            await websocket.send_text(f"event: message\ndata: {json.dumps(err)}\n\n")
+
+    # Task to pipe queue events back to the client over WebSocket
+    async def send_to_client():
+        try:
+            while True:
+                msg = await queue.get()
+                await websocket.send_text(f"event: message\ndata: {msg}\n\n")
+        except asyncio.CancelledError:
+            pass
+        except Exception as e:
+            print(f"Error sending to WS client: {e}")
+
+    send_task = asyncio.create_task(send_to_client())
+
+    try:
+        while True:
+            data = await websocket.receive_text()
+            try:
+                message = json.loads(data)
+            except Exception:
+                continue
+
+            msg_id = message.get("id")
+            method = message.get("method")
+            params = message.get("params", {})
+
+            # 1. Identity Verification
+            registered_identity = session_manager.get_identity(session_id)
+            if registered_identity != identity:
+                err_resp = {
+                    "jsonrpc": "2.0",
+                    "id": msg_id,
+                    "error": {
+                        "code": -32602,
+                        "message": f"Security Policy Violation: Identity mismatch for session {session_id} (registered={registered_identity}, request={identity})"
+                    }
+                }
+                log_audit_event(
+                    identity=identity,
+                    session_id=session_id,
+                    tool=params.get("name") if method == "tools/call" else None,
+                    args=params.get("arguments") if method == "tools/call" else None,
+                    decision="block",
+                    reason=f"Session identity pollution mismatch (registered={registered_identity}, request={identity})",
+                    reason_codes=["IDENTITY_MISMATCH"],
+                    risk_score=1.0
+                )
+                await queue.put(json.dumps(err_resp))
+                continue
+
+            # 2. Circuit Breaker Check
+            if circuit_breaker.is_suspended(session_id):
+                err_resp = {
+                    "jsonrpc": "2.0",
+                    "id": msg_id,
+                    "error": {
+                        "code": -32000,
+                        "message": "Security Policy Violation: Session suspended due to repeated security flags."
+                    }
+                }
+                log_audit_event(
+                    identity=identity,
+                    session_id=session_id,
+                    tool=params.get("name") if method == "tools/call" else None,
+                    args=params.get("arguments") if method == "tools/call" else None,
+                    decision="block",
+                    reason="Session suspended by circuit breaker.",
+                    reason_codes=["SESSION_SUSPENDED"],
+                    risk_score=1.0
+                )
+                await queue.put(json.dumps(err_resp))
+                continue
+
+            # 3. Policy Engine Enforcement
+            if method == "tools/call":
+                tool_name = params.get("name")
+                tool_args = params.get("arguments", {})
+
+                policy_engine.policy = load_policy()
+                result = policy_engine.evaluate(identity, tool_name, tool_args)
+
+                log_audit_event(
+                    identity=identity,
+                    session_id=session_id,
+                    tool=tool_name,
+                    args=tool_args,
+                    decision=result.decision.value,
+                    reason=result.reason,
+                    reason_codes=result.reason_codes,
+                    risk_score=result.risk_score
+                )
+
+                if result.decision == Decision.BLOCK:
+                    err_resp = {
+                        "jsonrpc": "2.0",
+                        "id": msg_id,
+                        "error": {
+                            "code": -32602,
+                            "message": f"Security Policy Violation: {result.reason}"
+                        }
+                    }
+                    await queue.put(json.dumps(err_resp))
+                    continue
+
+            # 4. Message Forwarding
+            proc_active = session_manager.processes.get(session_id)
+            if proc_active:
+                try:
+                    proc_active.stdin.write(json.dumps(message).encode() + b"\n")
+                    await proc_active.stdin.drain()
+                except Exception as e:
+                    err_resp = {
+                        "jsonrpc": "2.0",
+                        "id": msg_id,
+                        "error": {
+                            "code": -32099,
+                            "message": f"Error writing to stdio backend process: {e}"
+                        }
+                    }
+                    await queue.put(json.dumps(err_resp))
+            elif REAL_SERVER_URL:
+                backend_url = session_manager.backend_urls.get(session_id)
+                if not backend_url:
+                    for _ in range(20):
+                        backend_url = session_manager.backend_urls.get(session_id)
+                        if backend_url:
+                            break
+                        await asyncio.sleep(0.1)
+
+                if backend_url:
+                    try:
+                        if http_client:
+                            resp = await http_client.post(backend_url, json=message, timeout=10.0)
+                            if resp.status_code != 202:
+                                err_resp = {
+                                    "jsonrpc": "2.0",
+                                    "id": msg_id,
+                                    "error": {
+                                        "code": -32099,
+                                        "message": f"Backend server returned status code {resp.status_code}"
+                                    }
+                                }
+                                await queue.put(json.dumps(err_resp))
+                    except Exception as e:
+                        err_resp = {
+                            "jsonrpc": "2.0",
+                            "id": msg_id,
+                            "error": {
+                                "code": -32099,
+                                "message": f"Error proxying request to backend: {e}"
+                            }
+                        }
+                        await queue.put(json.dumps(err_resp))
+                else:
+                    err_resp = {
+                        "jsonrpc": "2.0",
+                        "id": msg_id,
+                        "error": {
+                            "code": -32099,
+                            "message": "Backend session initialization not ready"
+                        }
+                    }
+                    await queue.put(json.dumps(err_resp))
+            else:
+                # Mock execution fallback
+                if method == "tools/call":
+                    tool_name = params.get("name")
+                    tool_args = params.get("arguments", {})
+                    asyncio.create_task(mock_execute_tool(session_id, identity, msg_id, tool_name, tool_args))
+                elif method == "initialize":
+                    resp_data = {
+                        "jsonrpc": "2.0",
+                        "id": msg_id,
+                        "result": {
+                            "protocolVersion": "2024-11-05",
+                            "capabilities": {},
+                            "serverInfo": {
+                                "name": "mcp-policy-gateway-mock",
+                                "version": "1.0.0"
+                            }
+                        }
+                    }
+                    await queue.put(json.dumps(resp_data))
+                elif method == "tools/list":
+                    policy_engine.policy = load_policy()
+                    all_tools = [
+                        {"name": "read_file", "description": "Read file content"},
+                        {"name": "write_file", "description": "Write file content"},
+                        {"name": "list_directory", "description": "List directory content"},
+                        {"name": "execute_command", "description": "Run shell command"}
+                    ]
+                    tool_policy = policy_engine.policy.identities.get(identity)
+                    allowed_names = set(tool_policy.allowed_tools) if tool_policy else set()
+                    filtered = [t for t in all_tools if t["name"] in allowed_names]
+                    resp_data = {
+                        "jsonrpc": "2.0",
+                        "id": msg_id,
+                        "result": {
+                            "tools": filtered
+                        }
+                    }
+                    await queue.put(json.dumps(resp_data))
+                else:
+                    resp_data = {
+                        "jsonrpc": "2.0",
+                        "id": msg_id,
+                        "result": {}
+                    }
+                    await queue.put(json.dumps(resp_data))
+    except WebSocketDisconnect:
+        pass
+    finally:
+        send_task.cancel()
+        if backend_task:
+            backend_task.cancel()
+        if stderr_task:
+            stderr_task.cancel()
+        session_manager.remove_session(session_id)
