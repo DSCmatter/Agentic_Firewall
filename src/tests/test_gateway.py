@@ -8,7 +8,7 @@ import time
 import uvicorn
 from httpx import AsyncClient
 
-from src.mcp_gateway import app, AUDIT_LOG_PATH, circuit_breaker
+from src.gateway.mcp_gateway import app, AUDIT_LOG_PATH, circuit_breaker
 
 def get_free_port():
     s = socket.socket()

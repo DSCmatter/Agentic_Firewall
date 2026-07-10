@@ -9,9 +9,9 @@ import uvicorn
 from httpx import AsyncClient
 
 # Import app from gateway
-from src.mcp_gateway import app as gateway_app, AUDIT_LOG_PATH, circuit_breaker
+from src.gateway.mcp_gateway import app as gateway_app, AUDIT_LOG_PATH, circuit_breaker
 # Import app from toy_server
-from src.toy_server import app as toy_app
+from src.toy_server.toy_server import app as toy_app
 
 def get_free_port():
     s = socket.socket()
@@ -32,7 +32,7 @@ def servers():
     # Configure gateway environment pointing to the real server
     real_url = f"http://127.0.0.1:{toy_port}"
     os.environ["FW_REAL_SERVER_URL"] = real_url
-    import src.mcp_gateway as gw
+    import src.gateway.mcp_gateway as gw
     gw.REAL_SERVER_URL = real_url
 
     # Spin up gateway

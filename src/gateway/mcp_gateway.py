@@ -274,6 +274,35 @@ async def post_message(
     method = message.get("method")
     params = message.get("params", {})
 
+    # Verify session exists
+    q = session_manager.get_queue(session_id)
+    if not q:
+        raise HTTPException(status_code=404, detail="Session not found or expired")
+
+    # Verify identity matches the pinned session identity
+    registered_identity = session_manager.get_identity(session_id)
+    if registered_identity != identity:
+        err_resp = {
+            "jsonrpc": "2.0",
+            "id": msg_id,
+            "error": {
+                "code": -32602,
+                "message": f"Security Policy Violation: Identity mismatch for session {session_id} (registered={registered_identity}, request={identity})"
+            }
+        }
+        log_audit_event(
+            identity=identity,
+            session_id=session_id,
+            tool=params.get("name") if method == "tools/call" else None,
+            args=params.get("arguments") if method == "tools/call" else None,
+            decision="block",
+            reason=f"Session identity pollution mismatch (registered={registered_identity}, request={identity})",
+            reason_codes=["IDENTITY_MISMATCH"],
+            risk_score=1.0
+        )
+        await q.put(json.dumps(err_resp))
+        return Response(status_code=202)
+
     # 1. Circuit Breaker Check
     if circuit_breaker.is_suspended(session_id):
         err_resp = {
