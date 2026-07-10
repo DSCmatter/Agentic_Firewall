@@ -4,3 +4,7 @@ plan.md
 not-viable/
 .agent/skills
 files/
+.venv/
+*.log
+.pytest_cache/
+src/threat_log.txt

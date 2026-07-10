@@ -1,0 +1,24 @@
+{
+  "identities": {
+    "alice": {
+      "allowed_tools": [
+        "read_file",
+        "list_directory"
+      ],
+      "arg_constraints": {
+        "read_file": {
+          "path": "SANDBOX:D:/Coding"
+        },
+        "list_directory": {
+          "path": "SANDBOX:D:/Coding"
+        }
+      }
+    },
+    "bob": {
+      "allowed_tools": [
+        "read_file"
+      ],
+      "arg_constraints": {}
+    }
+  }
+}

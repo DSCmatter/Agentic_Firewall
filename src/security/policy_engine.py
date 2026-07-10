@@ -10,6 +10,7 @@ class Decision(str, Enum):
     ALLOW = "allow"
     CHALLENGE = "challenge"
     BLOCK = "block"
+    FLAG = "flag"
 
 
 @dataclass
@@ -18,6 +19,58 @@ class PolicyResult:
     reason: Optional[str] = None
     reason_codes: List[str] = field(default_factory=list)
     risk_score: float = 0.0
+
+
+from pydantic import BaseModel, Field
+
+class ToolPolicy(BaseModel):
+    allowed_tools: List[str] = Field(default_factory=list)
+    arg_constraints: Dict[str, Dict[str, str]] = Field(default_factory=dict)
+
+class GatewayPolicy(BaseModel):
+    identities: Dict[str, ToolPolicy] = Field(default_factory=dict)
+
+class PydanticPolicyEngine:
+    """
+    Pydantic-based policy engine mapping identity -> allowed_tools -> arg_constraints
+    """
+    def __init__(self, policy: GatewayPolicy) -> None:
+        self.policy = policy
+
+    def evaluate(self, identity: str, tool_name: str, tool_args: Dict[str, Any]) -> PolicyResult:
+        if identity not in self.policy.identities:
+            return PolicyResult(
+                decision=Decision.BLOCK,
+                reason=f"Identity '{identity}' is not configured in the security policy",
+                reason_codes=["IDENTITY_NOT_FOUND"],
+                risk_score=1.0
+            )
+
+        tool_policy = self.policy.identities[identity]
+        if tool_name not in tool_policy.allowed_tools:
+            return PolicyResult(
+                decision=Decision.BLOCK,
+                reason=f"Tool '{tool_name}' is not allowed for identity '{identity}'",
+                reason_codes=["TOOL_NOT_ALLOWED"],
+                risk_score=1.0
+            )
+
+        # Reuse existing sandbox and argument checks by passing state to BasicPolicyEngine
+        basic = BasicPolicyEngine(
+            allow_list=tool_policy.allowed_tools,
+            arg_constraints=tool_policy.arg_constraints,
+            mode="block"
+        )
+        ok, err = basic._validate_args(tool_name, tool_args)
+        if not ok:
+            return PolicyResult(
+                decision=Decision.BLOCK,
+                reason=err,
+                reason_codes=["ARG_CONSTRAINT_VIOLATION"],
+                risk_score=1.0
+            )
+
+        return PolicyResult(decision=Decision.ALLOW, risk_score=0.0)
 
 
 class BasicPolicyEngine:
