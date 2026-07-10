@@ -6,6 +6,7 @@ import asyncio
 from typing import Dict, Any, List, Optional
 from fastapi import FastAPI, Request, Response, HTTPException, Query, Header
 from fastapi.responses import StreamingResponse
+import httpx
 
 from security.policy_engine import PydanticPolicyEngine, GatewayPolicy, Decision, PolicyResult
 from security.output_guard import scan_output_text, extract_text_from_result
@@ -45,6 +46,7 @@ class SessionManager:
     def __init__(self):
         self.queues: Dict[str, asyncio.Queue] = {}
         self.identities: Dict[str, str] = {}
+        self.backend_urls: Dict[str, str] = {}
 
     def create_session(self, session_id: str, identity: str) -> asyncio.Queue:
         q = asyncio.Queue()
@@ -61,6 +63,7 @@ class SessionManager:
     def remove_session(self, session_id: str):
         self.queues.pop(session_id, None)
         self.identities.pop(session_id, None)
+        self.backend_urls.pop(session_id, None)
 
 session_manager = SessionManager()
 
@@ -73,7 +76,6 @@ def load_policy() -> GatewayPolicy:
                 return GatewayPolicy.model_validate(data)
         except Exception as e:
             print(f"Error loading policy_v2.json: {e}")
-    # Return basic default policy if not found (used for tests/fallback)
     return GatewayPolicy(identities={})
 
 policy_engine = PydanticPolicyEngine(load_policy())
@@ -106,6 +108,105 @@ def log_audit_event(
 # FastAPI App
 app = FastAPI(title="MCP Policy Gateway", version="2.0.0")
 
+async def listen_to_backend_stream(session_id: str, identity: str, response: httpx.Response):
+    try:
+        current_event = None
+        async for line in response.aiter_lines():
+            line = line.strip()
+            if not line:
+                continue
+            
+            if line.startswith("event:"):
+                current_event = line.split("event:", 1)[1].strip()
+            elif line.startswith("data:"):
+                data_val = line.split("data:", 1)[1].strip()
+                
+                if current_event == "endpoint":
+                    session_manager.backend_urls[session_id] = f"{REAL_SERVER_URL}{data_val}"
+                elif current_event == "message":
+                    try:
+                        msg = json.loads(data_val)
+                    except Exception:
+                        q = session_manager.get_queue(session_id)
+                        if q:
+                            await q.put(data_val)
+                        continue
+
+                    msg_id = msg.get("id")
+
+                    # Intercept tools/list response to filter allowed tools
+                    if msg.get("result", {}).get("tools"):
+                        policy_engine.policy = load_policy()
+                        tool_policy = policy_engine.policy.identities.get(identity)
+                        allowed = set(tool_policy.allowed_tools) if tool_policy else set()
+                        filtered = [t for t in msg["result"]["tools"] if t.get("name") in allowed]
+                        msg["result"]["tools"] = filtered
+                        data_val = json.dumps(msg)
+
+                    # Intercept tools/call response
+                    is_tool_result = (
+                        isinstance(msg.get("id"), (str, int))
+                        and isinstance(msg.get("result"), dict)
+                        and (
+                            "content" in msg["result"]
+                            or "structuredContent" in msg["result"]
+                            or "text" in msg["result"]
+                        )
+                    )
+
+                    if is_tool_result:
+                        text_blob = extract_text_from_result(msg["result"])
+                        reason_codes, snippets = scan_output_text(text_blob)
+
+                        if reason_codes:
+                            suspended = circuit_breaker.record_flag(session_id)
+
+                            with open(LOG_PATH, "a") as log:
+                                log.write(
+                                    f"[OUTPUT_RISK] mode=block codes={reason_codes} snippets={snippets} session={session_id}\n"
+                                )
+
+                            log_audit_event(
+                                identity=identity,
+                                session_id=session_id,
+                                tool="PROXIED_TOOL_RESPONSE",
+                                args=None,
+                                decision="block" if suspended else "flag",
+                                reason=f"Suspicious tool output blocked: {reason_codes}",
+                                reason_codes=reason_codes,
+                                risk_score=0.8
+                            )
+
+                            blocked_msg = {
+                                "jsonrpc": "2.0",
+                                "id": msg_id,
+                                "error": {
+                                    "code": -32603,
+                                    "message": "Security Policy Violation: Suspicious tool output blocked"
+                                }
+                            }
+                            data_val = json.dumps(blocked_msg)
+                        else:
+                            log_audit_event(
+                                identity=identity,
+                                session_id=session_id,
+                                tool="PROXIED_TOOL_RESPONSE",
+                                args=None,
+                                decision="allow",
+                                risk_score=0.0
+                            )
+                            data_val = json.dumps(msg)
+
+                    q = session_manager.get_queue(session_id)
+                    if q:
+                        await q.put(data_val)
+            elif line.startswith(":"):
+                q = session_manager.get_queue(session_id)
+                if q:
+                    await q.put(line)
+    except Exception as e:
+        print(f"Error in backend listener: {e}")
+
 @app.get("/sse")
 async def sse_endpoint(
     request: Request,
@@ -116,24 +217,43 @@ async def sse_endpoint(
         session_id = str(uuid.uuid4())
 
     async def event_generator():
-        # Register session
         queue = session_manager.create_session(session_id, identity)
         
         # Send initial message endpoint to client
         yield f"event: endpoint\ndata: /message?session_id={session_id}&identity={identity}\n\n"
         
+        backend_task = None
+        if REAL_SERVER_URL:
+            client_sse = httpx.AsyncClient()
+            try:
+                req = client_sse.build_request("GET", f"{REAL_SERVER_URL}/sse?session_id={session_id}")
+                response = await client_sse.send(req, stream=True)
+                backend_task = asyncio.create_task(
+                    listen_to_backend_stream(session_id, identity, response)
+                )
+            except Exception as e:
+                print(f"Error connecting to backend MCP: {e}")
+                err = {
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32099,
+                        "message": f"Connection to backend server failed: {e}"
+                    }
+                }
+                yield f"event: message\ndata: {json.dumps(err)}\n\n"
+
         try:
             while True:
                 if await request.is_disconnected():
                     break
                 try:
-                    # Non-blocking fetch of queued messages
                     msg = await asyncio.wait_for(queue.get(), timeout=1.0)
                     yield f"event: message\ndata: {msg}\n\n"
                 except asyncio.TimeoutError:
-                    # Keepalive ping
                     yield ": ping\n\n"
         finally:
+            if backend_task:
+                backend_task.cancel()
             session_manager.remove_session(session_id)
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
@@ -179,16 +299,14 @@ async def post_message(
             await q.put(json.dumps(err_resp))
         return Response(status_code=202)
 
-    # 2. Intercept tools/call
+    # 2. Intercept tools/call for policy checking
     if method == "tools/call":
         tool_name = params.get("name")
         tool_args = params.get("arguments", {})
 
-        # Re-initialize policy engine at request time to support test dynamic configuration
         policy_engine.policy = load_policy()
         result = policy_engine.evaluate(identity, tool_name, tool_args)
 
-        # Log policy decision immediately
         log_audit_event(
             identity=identity,
             session_id=session_id,
@@ -214,13 +332,54 @@ async def post_message(
                 await q.put(json.dumps(err_resp))
             return Response(status_code=202)
 
-        # Forward request if clean
-        if REAL_SERVER_URL:
-            # Real proxy code (Phase 2 integration target)
-            pass
+    # 3. Forward to backend if REAL_SERVER_URL is configured
+    if REAL_SERVER_URL:
+        # Wait up to 2 seconds for backend session to establish
+        for _ in range(20):
+            backend_url = session_manager.backend_urls.get(session_id)
+            if backend_url:
+                break
+            await asyncio.sleep(0.1)
         else:
-            # Mock mode tool execution
-            asyncio.create_task(mock_execute_tool(session_id, identity, msg_id, tool_name, tool_args))
+            raise HTTPException(status_code=503, detail="Backend session initialization not ready")
+
+        async def forward_to_backend():
+            try:
+                async with httpx.AsyncClient() as client:
+                    resp = await client.post(backend_url, json=message, timeout=10.0)
+                    if resp.status_code != 202:
+                        err_resp = {
+                            "jsonrpc": "2.0",
+                            "id": msg_id,
+                            "error": {
+                                "code": -32099,
+                                "message": f"Backend server returned status code {resp.status_code}"
+                            }
+                        }
+                        q = session_manager.get_queue(session_id)
+                        if q:
+                            await q.put(json.dumps(err_resp))
+            except Exception as e:
+                err_resp = {
+                    "jsonrpc": "2.0",
+                    "id": msg_id,
+                    "error": {
+                        "code": -32099,
+                        "message": f"Error proxying request to backend: {e}"
+                    }
+                }
+                q = session_manager.get_queue(session_id)
+                if q:
+                    await q.put(json.dumps(err_resp))
+
+        asyncio.create_task(forward_to_backend())
+        return Response(status_code=202)
+
+    # 4. Fallback Mock Server execution (when not proxying)
+    if method == "tools/call":
+        tool_name = params.get("name")
+        tool_args = params.get("arguments", {})
+        asyncio.create_task(mock_execute_tool(session_id, identity, msg_id, tool_name, tool_args))
 
     elif method == "initialize":
         resp = {
@@ -240,7 +399,6 @@ async def post_message(
             await q.put(json.dumps(resp))
 
     elif method == "tools/list":
-        # Re-load policy
         policy_engine.policy = load_policy()
         all_tools = [
             {"name": "read_file", "description": "Read file content"},
@@ -248,7 +406,6 @@ async def post_message(
             {"name": "list_directory", "description": "List directory content"},
             {"name": "execute_command", "description": "Run shell command"}
         ]
-        # Filter based on allowed tools for identity
         tool_policy = policy_engine.policy.identities.get(identity)
         allowed_names = set(tool_policy.allowed_tools) if tool_policy else set()
         filtered = [t for t in all_tools if t["name"] in allowed_names]
@@ -264,7 +421,6 @@ async def post_message(
         if q:
             await q.put(json.dumps(resp))
     else:
-        # Generic fallback success response
         resp = {
             "jsonrpc": "2.0",
             "id": msg_id,
@@ -306,16 +462,13 @@ async def mock_execute_tool(session_id: str, identity: str, msg_id: Any, tool_na
     }
 
     if reason_codes:
-        # Record flag in circuit breaker
         suspended = circuit_breaker.record_flag(session_id)
 
-        # Log output risk detection to threat_log
         with open(LOG_PATH, "a") as log:
             log.write(
                 f"[OUTPUT_RISK] mode=block codes={reason_codes} snippets={snippets} session={session_id}\n"
             )
 
-        # Log decision to audit log
         log_audit_event(
             identity=identity,
             session_id=session_id,

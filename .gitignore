@@ -7,4 +7,6 @@ files/
 .venv/
 *.log
 .pytest_cache/
-src/threat_log.txt
+src/threat_log*.txt
+skill-selector.md
+*.txt
