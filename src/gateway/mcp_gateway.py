@@ -3,6 +3,7 @@ import json
 import uuid
 import datetime
 import asyncio
+from contextlib import asynccontextmanager
 from typing import Dict, Any, List, Optional
 from fastapi import FastAPI, Request, Response, HTTPException, Query, Header
 from fastapi.responses import StreamingResponse
@@ -105,8 +106,18 @@ def log_audit_event(
     with open(AUDIT_LOG_PATH, "a") as f:
         f.write(json.dumps(event) + "\n")
 
+# Global HTTP Client Pool
+http_client: Optional[httpx.AsyncClient] = None
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global http_client
+    http_client = httpx.AsyncClient()
+    yield
+    await http_client.aclose()
+
 # FastAPI App
-app = FastAPI(title="MCP Policy Gateway", version="2.0.0")
+app = FastAPI(title="MCP Policy Gateway", version="2.0.0", lifespan=lifespan)
 
 async def listen_to_backend_stream(session_id: str, identity: str, response: httpx.Response):
     try:
@@ -206,6 +217,8 @@ async def listen_to_backend_stream(session_id: str, identity: str, response: htt
                     await q.put(line)
     except Exception as e:
         print(f"Error in backend listener: {e}")
+    finally:
+        await response.aclose()
 
 @app.get("/sse")
 async def sse_endpoint(
@@ -223,11 +236,10 @@ async def sse_endpoint(
         yield f"event: endpoint\ndata: /message?session_id={session_id}&identity={identity}\n\n"
         
         backend_task = None
-        if REAL_SERVER_URL:
-            client_sse = httpx.AsyncClient()
+        if REAL_SERVER_URL and http_client:
             try:
-                req = client_sse.build_request("GET", f"{REAL_SERVER_URL}/sse?session_id={session_id}")
-                response = await client_sse.send(req, stream=True)
+                req = http_client.build_request("GET", f"{REAL_SERVER_URL}/sse?session_id={session_id}")
+                response = await http_client.send(req, stream=True)
                 backend_task = asyncio.create_task(
                     listen_to_backend_stream(session_id, identity, response)
                 )
@@ -374,8 +386,8 @@ async def post_message(
 
         async def forward_to_backend():
             try:
-                async with httpx.AsyncClient() as client:
-                    resp = await client.post(backend_url, json=message, timeout=10.0)
+                if http_client:
+                    resp = await http_client.post(backend_url, json=message, timeout=10.0)
                     if resp.status_code != 202:
                         err_resp = {
                             "jsonrpc": "2.0",

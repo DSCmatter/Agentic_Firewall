@@ -130,6 +130,69 @@ uv run pytest src
 ### Running the Red-Team Benchmark
 Run the OWASP attack harness comparing baseline and protected servers:
 ```bash
+# PowerShell
 $env:PYTHONPATH=".;src"
 uv run src/benchmarking/attack_harness.py
+
+# Git Bash
+PYTHONPATH=".;src" uv run src/benchmarking/attack_harness.py
 ```
+
+---
+
+## 6. Manual Testing & Verification
+
+You can manually inspect proxy routing, path-traversal blocking, and session pollution prevention using standard shell clients or the official MCP Inspector.
+
+### Scenario Startup
+Start the target vulnerabilities testbed and policy gateway:
+1. **Start Toy Server (Terminal 1)**:
+   * *PowerShell*: `$env:PYTHONPATH=".;src"; uv run uvicorn src.toy_server.toy_server:app --port 8000`
+   * *Git Bash*: `PYTHONPATH=".;src" uv run uvicorn src.toy_server.toy_server:app --port 8000`
+2. **Start Gateway Server (Terminal 2)**:
+   * *PowerShell*: `$env:PYTHONPATH=".;src"; $env:FW_REAL_SERVER_URL="http://127.0.0.1:8000"; uv run uvicorn src.gateway.mcp_gateway:app --port 8001`
+   * *Git Bash*: `PYTHONPATH=".;src" FW_REAL_SERVER_URL="http://127.0.0.1:8000" uv run uvicorn src.gateway.mcp_gateway:app --port 8001`
+
+---
+
+### Option A: Testing via Git Bash Command Line
+Open a client session stream in one window, and send requests in another:
+
+1. **Open SSE client connection (Terminal 3)**:
+   ```bash
+   curl "http://127.0.0.1:8001/sse?identity=alice&session_id=session_abc"
+   ```
+2. **Execute Tool Calls (Terminal 4)**:
+   * **Scenario 1: Authorized File Read (Allow)**:
+     ```bash
+     curl -X POST "http://127.0.0.1:8001/message?session_id=session_abc&identity=alice" -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "read_file", "arguments": {"path": "src/gateway/policy_v2.json"}}}'
+     ```
+   * **Scenario 2: Path Traversal (Block)**:
+     ```bash
+     curl -X POST "http://127.0.0.1:8001/message?session_id=session_abc&identity=alice" -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": "read_file", "arguments": {"path": "C:\\Windows\\win.ini"}}}'
+     ```
+   * **Scenario 3: Session Identity Pollution (Block)**:
+     ```bash
+     curl -X POST "http://127.0.0.1:8001/message?session_id=session_abc&identity=bob" -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 3, "method": "tools/call", "params": {"name": "read_file", "arguments": {"path": "src/gateway/policy_v2.json"}}}'
+     ```
+3. **Verify logs on disk**:
+   * Open the active audit logs at [src/gateway/gateway_audit.log](./src/gateway/gateway_audit.log) to see the JSON-structured decision logs.
+
+---
+
+### Option B: Interactive Verification via MCP Inspector
+The official **MCP Inspector** acts as a web client UI over SSE to view and trigger tool executions:
+
+1. **Launch the Inspector**:
+   ```bash
+   npx -y @modelcontextprotocol/inspector http://127.0.0.1:8001/sse?identity=alice
+   ```
+2. **Connect to SSE**:
+   * In the top-left sidebar of the web page, change **Transport Type** from `STDIO` to `SSE`.
+   * Ensure the target URL is set to `http://127.0.0.1:8001/sse?identity=alice`.
+   * Click **Connect**.
+3. **Trigger Tool Call Evals**:
+   * Under the **Tools** tab, you will only see tools allowed for `alice` (least-privilege tool list filtering).
+   * Call `read_file` with path `src/gateway/policy_v2.json` to verify successful execution.
+   * Call `read_file` with path `/etc/passwd` to observe the immediate `ARG_CONSTRAINT_VIOLATION` security block.
+

@@ -30,6 +30,56 @@ class ToolPolicy(BaseModel):
 class GatewayPolicy(BaseModel):
     identities: Dict[str, ToolPolicy] = Field(default_factory=dict)
 
+def validate_tool_args(
+    tool_name: str, args: Dict[str, Any], arg_constraints: Dict[str, Dict[str, str]]
+) -> tuple[bool, Optional[str]]:
+    if tool_name not in arg_constraints:
+        return True, None
+
+    rules = arg_constraints[tool_name]
+
+    for param, rule in rules.items():
+        val = args.get(param)
+        if not val:
+            continue
+
+        if rule.startswith("SANDBOX:"):
+            sandbox_path = rule.split("SANDBOX:", 1)[1].strip()
+            sandbox_abs = os.path.abspath(os.path.normpath(sandbox_path))
+            val_abs = os.path.abspath(os.path.normpath(str(val)))
+
+            # Robust sandbox containment check
+            try:
+                if os.path.commonpath([sandbox_abs, val_abs]) != sandbox_abs:
+                    return (
+                        False,
+                        f"Path '{val}' is outside sandbox '{sandbox_path}'",
+                    )
+            except ValueError:
+                # Different drives on Windows, etc.
+                return False, f"Path '{val}' is outside sandbox '{sandbox_path}'"
+
+            if ".." in str(val):
+                return False, f"Path traversal detected in '{val}'"
+
+        elif rule.startswith("ALLOW_ONLY:"):
+            allowed = [
+                x.strip() for x in rule.split("ALLOW_ONLY:", 1)[1].split(",")
+            ]
+            if str(val) not in allowed:
+                return False, f"Value '{val}' not in allowed list: {allowed}"
+
+        elif rule.startswith("BLOCK_TERMS:"):
+            blocked = [
+                x.strip() for x in rule.split("BLOCK_TERMS:", 1)[1].split(",")
+            ]
+            for term in blocked:
+                if term and term.lower() in str(val).lower():
+                    return False, f"Blocked term '{term}' found in '{val}'"
+
+    return True, None
+
+
 class PydanticPolicyEngine:
     """
     Pydantic-based policy engine mapping identity -> allowed_tools -> arg_constraints
@@ -55,13 +105,7 @@ class PydanticPolicyEngine:
                 risk_score=1.0
             )
 
-        # Reuse existing sandbox and argument checks by passing state to BasicPolicyEngine
-        basic = BasicPolicyEngine(
-            allow_list=tool_policy.allowed_tools,
-            arg_constraints=tool_policy.arg_constraints,
-            mode="block"
-        )
-        ok, err = basic._validate_args(tool_name, tool_args)
+        ok, err = validate_tool_args(tool_name, tool_args, tool_policy.arg_constraints)
         if not ok:
             return PolicyResult(
                 decision=Decision.BLOCK,
@@ -134,48 +178,4 @@ class BasicPolicyEngine:
     def _validate_args(
         self, tool_name: str, args: Dict[str, Any]
     ) -> tuple[bool, Optional[str]]:
-        if tool_name not in self.arg_constraints:
-            return True, None
-
-        rules = self.arg_constraints[tool_name]
-
-        for param, rule in rules.items():
-            val = args.get(param)
-            if not val:
-                continue
-
-            if rule.startswith("SANDBOX:"):
-                sandbox_path = rule.split("SANDBOX:", 1)[1].strip()
-                sandbox_abs = os.path.abspath(os.path.normpath(sandbox_path))
-                val_abs = os.path.abspath(os.path.normpath(str(val)))
-
-                # Robust sandbox containment check
-                try:
-                    if os.path.commonpath([sandbox_abs, val_abs]) != sandbox_abs:
-                        return (
-                            False,
-                            f"Path '{val}' is outside sandbox '{sandbox_path}'",
-                        )
-                except ValueError:
-                    # Different drives on Windows, etc.
-                    return False, f"Path '{val}' is outside sandbox '{sandbox_path}'"
-
-                if ".." in str(val):
-                    return False, f"Path traversal detected in '{val}'"
-
-            elif rule.startswith("ALLOW_ONLY:"):
-                allowed = [
-                    x.strip() for x in rule.split("ALLOW_ONLY:", 1)[1].split(",")
-                ]
-                if str(val) not in allowed:
-                    return False, f"Value '{val}' not in allowed list: {allowed}"
-
-            elif rule.startswith("BLOCK_TERMS:"):
-                blocked = [
-                    x.strip() for x in rule.split("BLOCK_TERMS:", 1)[1].split(",")
-                ]
-                for term in blocked:
-                    if term and term.lower() in str(val).lower():
-                        return False, f"Blocked term '{term}' found in '{val}'"
-
-        return True, None
+        return validate_tool_args(tool_name, args, self.arg_constraints)
