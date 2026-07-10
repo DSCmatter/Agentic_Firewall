@@ -2,7 +2,21 @@
 
 **MCP Policy Gateway & Independent OWASP Red-Team Security Benchmark**
 
-Agentic Firewall v2 is a runtime security middleware and red-team benchmark harness designed to secure Model Context Protocol (MCP) applications. It extends single-canary pattern detection into a least-privilege tool execution gateway, featuring counter-based circuit breakers, pinned session identity verification, and dynamic tool-list filtering.
+Inspired by [Anthropic's Security Research](https://www.anthropic.com/news/disrupting-AI-espionage)
+
+---
+
+## The Problem
+
+Recent security research revealed a critical vulnerability in AI coding environments: autonomous AI agents can be compromised when they connect to unverified tools and execute requests without human oversight. The attack succeeded because there was no governance layer to validate intent before execution.
+
+## The Solution
+
+Agentic Firewall v2 is a runtime security middleware and red-team benchmark harness designed to secure Model Context Protocol (MCP) applications. It acts as an intercepting proxy between an MCP client (AI agent) and any MCP server — enforcing least-privilege tool policies, pinned session identity, output guard canary scanning, and a counter-based circuit breaker.
+
+## Why This Matters
+
+In an era where AI agents are becoming increasingly autonomous, security can't be an afterthought. Agentic Firewall provides the governance layer needed to safely leverage AI assistance without sacrificing control — validating every tool call, logging every decision, and suspending sessions that exhibit rogue behavior.
 
 ---
 
@@ -10,23 +24,31 @@ Agentic Firewall v2 is a runtime security middleware and red-team benchmark harn
 
 The gateway acts as an intercepting proxy between the MCP Client (Agent) and the MCP Server. It intercepts and filters `tools/call` JSON-RPC requests, while passing other messages (`initialize`, etc.) through safely.
 
-```mermaid
-flowchart TD
-    Client[MCP Client / Agent] -->|1. GET /sse?identity=alice| Gateway[Policy Gateway]
-    Gateway -->|2. GET /sse?session_id=...| Backend[Toy MCP Server]
-    Backend -->|3. Yields endpoint info| Gateway
-    Gateway -->|4. Yields client endpoint| Client
-    
-    Client -->|5. POST /message tools/call| Gateway
-    Gateway -->|6. Pinned Session Verification| Gateway
-    Gateway -->|7. Pydantic Policy Matcher| Gateway
-    
-    Gateway -->|8. POST /message if allowed| Backend
-    Backend -->|9. Returns execution output| Gateway
-    Gateway -->|10. Output Guard Canary Scan| Gateway
-    Gateway -->|11. Yields Clean Output| Client
-    
-    style Gateway fill:#1e1e2e,stroke:#cba6f7,stroke-width:2px;
+```
+┌────────────────────────────────────────────────────────────────┐
+│                    MCP Client (AI Agent)                       │
+└───────────┬──────────────────────────────────────▲────────────┘
+            │  1. GET /sse?identity=alice           │ 4. SSE endpoint URL
+            ▼                                      │
+┌───────────────────────────────────────────────────────────────┐
+│                      POLICY GATEWAY                           │
+│                                                               │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │  → Pinned Session Identity Verification                 │  │
+│  │  → Pydantic Policy Engine (per-identity allow-list)     │  │
+│  │  → Argument Constraint Enforcement (sandbox paths etc.) │  │
+│  │  → Output Guard Canary Scanner (data egress detection)  │  │
+│  │  → Counter-Based Circuit Breaker (session suspension)   │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                         ↓ AUDIT LOG ↓                         │
+│              src/gateway/gateway_audit.log (JSONL)            │
+└───────────┬──────────────────────────────────────▲────────────┘
+            │  2. GET /sse (proxied session)        │ 3. SSE endpoint info
+            ▼                                      │
+┌────────────────────────────────────────────────────────────────┐
+│               TOY MCP SERVER (deliberate footguns)             │
+│         shell exec · file read/write · outbound HTTP           │
+└────────────────────────────────────────────────────────────────┘
 ```
 
 ### Core Protection Layers
