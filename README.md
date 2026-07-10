@@ -24,11 +24,20 @@ In an era where AI agents are becoming increasingly autonomous, security can't b
 
 The gateway acts as an intercepting proxy between the MCP Client (Agent) and the MCP Server. It intercepts and filters `tools/call` JSON-RPC requests, while passing other messages (`initialize`, etc.) through safely.
 
+### Supported Transports & Connection Modes
+
+* **Client-to-Gateway Transports**:
+  * **HTTP/SSE**: Standard Model Context Protocol SSE stream (e.g. `GET /sse?identity=alice`).
+  * **WebSocket**: Full-duplex connection via `ws://` to `/ws?identity=alice` WebSocket endpoint.
+* **Gateway-to-Server Connection Modes**:
+  * **Stdio Subprocess Proxy (Local)**: Spawns the backend MCP server as a local subprocess directly (e.g. SQLite, Git, or filesystem servers), proxying communication through standard input/output pipes (`stdin`/`stdout`). Configure using `FW_REAL_SERVER_CMD`.
+  * **HTTP/SSE Proxy (Remote)**: Proxies JSON-RPC messages over HTTP/SSE network endpoints to an external backend server. Configure using `FW_REAL_SERVER_URL`.
+
 ```
 ┌────────────────────────────────────────────────────────────────┐
 │                    MCP Client (AI Agent)                       │
 └───────────┬──────────────────────────────────────▲────────────┘
-            │  1. GET /sse?identity=alice           │ 4. SSE endpoint URL
+            │  1. HTTP/SSE or WebSocket connection   │ 4. Events / Responses
             ▼                                      │
 ┌───────────────────────────────────────────────────────────────┐
 │                      POLICY GATEWAY                           │
@@ -43,10 +52,11 @@ The gateway acts as an intercepting proxy between the MCP Client (Agent) and the
 │                         ↓ AUDIT LOG ↓                         │
 │              src/gateway/gateway_audit.log (JSONL)            │
 └───────────┬──────────────────────────────────────▲────────────┘
-            │  2. GET /sse (proxied session)        │ 3. SSE endpoint info
+            │  2. Local Subprocess Stdio (stdin)    │ 3. Stdout / SSE events
+            │     or Remote SSE GET /sse           │
             ▼                                      │
 ┌────────────────────────────────────────────────────────────────┐
-│               TOY MCP SERVER (deliberate footguns)             │
+│                   BACKEND MCP SERVER                           │
 │         shell exec · file read/write · outbound HTTP           │
 └────────────────────────────────────────────────────────────────┘
 ```
@@ -54,7 +64,7 @@ The gateway acts as an intercepting proxy between the MCP Client (Agent) and the
 ### Core Protection Layers
 
 1. **Least-Privilege Pydantic Policies**: Evaluates incoming tool requests against a strict `identity -> allowed_tools -> arg_constraints` schema. Out-of-bounds paths or unallowed tools are blocked instantly.
-2. **Pinned Session Identity Verification**: Binds the identity verified at session startup (`GET /sse`) to all incoming POST commands on that session ID, completely mitigating session identity pollution and parameter tampering attacks.
+2. **Pinned Session Identity Verification**: Binds the identity verified at session startup to all incoming messages on that session ID, completely mitigating session identity pollution and parameter tampering attacks.
 3. **Outbound Output Guard Canary Scanner**: Scans all tool response texts for sensitive canary patterns—such as Linux shadow databases, private SSH keys, cloud tokens, and system INI files—blocking leaks at the proxy level.
 4. **Stateful Circuit Breaker**: Tracks security flags per session. If a session triggers the Output Guard 3 consecutive times, the gateway suspends the session and rejects all subsequent execution requests.
 5. **JSON Lines Audit Logging**: Logs every execution step, request details, and security decision in a structured JSON Lines format to `src/gateway/gateway_audit.log`.
@@ -68,26 +78,28 @@ The codebase is organized into a modular, clean directory layout:
 ```
 src/
   gateway/
-    mcp_gateway.py        # FastAPI Gateway Server (HTTP/SSE proxy)
-    policy_v2.json         # Pydantic Policy Schemes Configuration
+    mcp_gateway.py        # Gateway server router (HTTP/SSE and WebSockets)
+    state.py              # Log configurations, circuit breaker & session state
+    transports.py         # Subprocess piping and stream reader loops
+    mock_server.py        # Mock tool execution fallback simulation
+    policy_v2.json        # Pydantic Policy Schemes Configuration
   toy_server/
-    toy_server.py          # Target MCP Vulnerability Testbed Server
+    toy_server.py         # Target MCP Vulnerability Testbed Server
   benchmarking/
-    attack_harness.py      # Red-Team OWASP benchmark runner
-    benchmark_governor.py  # Legacy benchmark
-    bench_results.json     # Legacy benchmark results cache
+    attack_harness.py     # Red-Team OWASP benchmark runner
   security/
-    policy_engine.py       # Pydantic Policy Enforcement Engine
-    output_guard.py        # Canary scanner output filter
+    policy_engine.py      # Pydantic Policy Enforcement Engine
+    output_guard.py       # Canary scanner output filter
   tests/
-    test_gateway.py        # Gateway integration tests
-    test_output_guard.py   # Output guard unit tests
-    test_policy.py         # Policy unit tests
-    test_proxy.py          # Gateway-to-Backend proxy tests
+    test_gateway.py       # Gateway integration tests
+    test_output_guard.py  # Output guard unit tests
+    test_policy.py        # Policy unit tests
+    test_proxy.py         # Gateway-to-Backend proxy tests
+    test_transports.py    # SSE & WebSocket connection transport tests
   legacy/
-    mcp_governor.py        # Legacy Phase 0 controller
-    policy.json            # Legacy Phase 0 policy
-    test.py                # Legacy Phase 0 test script
+    mcp_governor.py       # Legacy Phase 0 controller
+    policy.json           # Legacy Phase 0 policy
+    test.py               # Legacy Phase 0 test script
 ```
 
 ---
@@ -217,4 +229,39 @@ The official **MCP Inspector** acts as a web client UI over SSE to view and trig
    * Under the **Tools** tab, you will only see tools allowed for `alice` (least-privilege tool list filtering).
    * Call `read_file` with path `src/gateway/policy_v2.json` to verify successful execution.
    * Call `read_file` with path `/etc/passwd` to observe the immediate `ARG_CONSTRAINT_VIOLATION` security block.
+
+---
+
+### Option C: Local Stdio Subprocess Proxying
+You can run the gateway to spawn the backend MCP server directly as a local subprocess via `stdin`/`stdout` pipes:
+
+1. **Start Gateway Server with subprocess spawning**:
+   * *PowerShell*:
+     ```powershell
+     $env:PYTHONPATH=".;src"
+     $env:FW_REAL_SERVER_CMD='["uv", "run", "python", "-m", "src.toy_server.toy_server"]'
+     uv run uvicorn src.gateway.mcp_gateway:app --port 8001
+     ```
+   * *Git Bash*:
+     ```bash
+     PYTHONPATH=".;src" FW_REAL_SERVER_CMD='["uv", "run", "python", "-m", "src.toy_server.toy_server"]' uv run uvicorn src.gateway.mcp_gateway:app --port 8001
+     ```
+2. **Verify Process Lifecycle**:
+   * Connect an SSE or WebSocket client. The gateway spawns the command as a subprocess, pipes inputs to `stdin`, reads outputs from `stdout` (running filtering and output guard checks), and automatically terminates/kills the subprocess when the client disconnects.
+
+---
+
+### Option D: Bidirectional WebSocket Client Connection
+You can interface with the gateway over full-duplex WebSockets instead of SSE:
+
+1. **Connect via WebSocket client (e.g. `wscat`)**:
+   ```bash
+   npx wscat -c "ws://127.0.0.1:8001/ws?identity=alice&session_id=session_ws"
+   ```
+2. **Send JSON-RPC Frame**:
+   ```json
+   {"jsonrpc": "2.0", "id": 1, "method": "tools/list"}
+   ```
+   * Receive the filtered tools list immediately over the WebSocket connection.
+
 
