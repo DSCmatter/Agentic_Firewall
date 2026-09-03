@@ -3,6 +3,7 @@ not-viable/
 .agent/skills
 files/
 .venv/
+*.egg-info/
 *.log
 .pytest_cache/
 src/threat_log*.txt

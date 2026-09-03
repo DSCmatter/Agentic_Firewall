@@ -146,30 +146,32 @@ The Agentic Firewall v2 focuses on system-level tool execution boundaries and da
 
 ## 5. Getting Started
 
-### Installation
-Clone the repository and install dependencies using `uv` (recommended):
+### Stage 0: install and run in three steps
+
 ```bash
-uv venv
-.venv\Scripts\activate
-uv pip install fastapi uvicorn pydantic httpx pytest pytest-asyncio anyio
+git clone <your-repository-url> && cd Agentic_Firewall
+uv sync
+uv run agentic-firewall
 ```
+
+`agentic-firewall` selects free local ports, starts the toy server and gateway,
+runs the built-in OWASP benchmark, and stops both processes even if the run
+fails or is interrupted. No virtual-environment activation or environment
+variables are required.
+
+For a standard pip workflow, use `python -m pip install .` and then run
+`agentic-firewall`.
 
 ### Running Tests
 Execute the pytest suites:
 ```bash
-$env:PYTHONPATH=".;src"
-uv run pytest src
+uv run --extra dev pytest
 ```
 
 ### Running the Red-Team Benchmark
 Run the OWASP attack harness comparing baseline and protected servers:
 ```bash
-# PowerShell
-$env:PYTHONPATH=".;src"
-uv run src/benchmarking/attack_harness.py
-
-# Git Bash
-PYTHONPATH=".;src" uv run src/benchmarking/attack_harness.py
+uv run agentic-firewall
 ```
 
 ---

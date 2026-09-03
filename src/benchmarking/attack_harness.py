@@ -40,6 +40,37 @@ def start_server(app_module: str, port: int, env: dict = None) -> subprocess.Pop
     )
     return proc
 
+
+async def wait_for_server(proc: subprocess.Popen, port: int, name: str) -> None:
+    """Wait until a spawned Uvicorn service is reachable or fail with context."""
+    url = f"http://127.0.0.1:{port}/openapi.json"
+    deadline = time.monotonic() + 10
+    async with AsyncClient() as client:
+        while time.monotonic() < deadline:
+            if proc.poll() is not None:
+                _, stderr = proc.communicate()
+                details = stderr.decode(errors="replace").strip()
+                raise RuntimeError(f"{name} exited during startup: {details}")
+            try:
+                if (await client.get(url)).is_success:
+                    return
+            except Exception:
+                pass
+            await asyncio.sleep(0.1)
+    raise RuntimeError(f"{name} did not become ready within 10 seconds.")
+
+
+def stop_server(proc: subprocess.Popen | None) -> None:
+    """Stop a child process without leaving a gateway or toy server behind."""
+    if proc is None or proc.poll() is not None:
+        return
+    proc.terminate()
+    try:
+        proc.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        proc.wait(timeout=5)
+
 # Attack Case Definitions
 # Returns (exploit_success_standalone, blocked_by_gateway)
 async def run_attack_1(client: AsyncClient, session_id: str, identity: str) -> bool:
@@ -434,47 +465,41 @@ async def execute_suite(base_url: str, mode: str) -> Dict[int, Tuple[bool, str]]
                 results[aid] = (blocked, "Blocked" if blocked else "Bypassed")
     return results
 
-async def main():
+async def run_benchmark():
     print("=== STARTING OWASP RED-TEAM BENCHMARK HARNESS ===")
     
     # 1. Spin up standalone Toy Server
     toy_port = get_free_port()
     print(f"Launching Standalone Toy MCP Server on port {toy_port}...")
-    toy_proc = start_server("src.toy_server.toy_server:app", toy_port)
-    time.sleep(1.5)
-    
-    # Run standalone tests
-    print("Executing standalone baseline attacks...")
-    standalone_results = await execute_suite(f"http://127.0.0.1:{toy_port}", "standalone")
-    
-    toy_proc.terminate()
-    toy_proc.wait()
+    toy_proc = start_server("toy_server.toy_server:app", toy_port)
+    try:
+        await wait_for_server(toy_proc, toy_port, "Standalone toy server")
+        print("Executing standalone baseline attacks...")
+        standalone_results = await execute_suite(f"http://127.0.0.1:{toy_port}", "standalone")
+    finally:
+        stop_server(toy_proc)
     print("Standalone baseline suite complete.")
     
     # 2. Spin up Toy Server + Gateway Proxy
     toy_port = get_free_port()
     gw_port = get_free_port()
     print(f"Launching Backend Server on port {toy_port}...")
-    toy_proc = start_server("src.toy_server.toy_server:app", toy_port)
-    time.sleep(1.0)
-    
-    print(f"Launching Gateway on port {gw_port} proxying to port {toy_port}...")
-    gw_proc = start_server(
-        "src.gateway.mcp_gateway:app",
-        gw_port,
-        env={"FW_REAL_SERVER_URL": f"http://127.0.0.1:{toy_port}"}
-    )
-    time.sleep(1.5)
-    
-    # Run protected tests
-    print("Executing protected gateway attacks...")
-    protected_results = await execute_suite(f"http://127.0.0.1:{gw_port}", "protected")
-    
-    # Clean up
-    toy_proc.terminate()
-    gw_proc.terminate()
-    toy_proc.wait()
-    gw_proc.wait()
+    toy_proc = start_server("toy_server.toy_server:app", toy_port)
+    gw_proc = None
+    try:
+        await wait_for_server(toy_proc, toy_port, "Backend toy server")
+        print(f"Launching Gateway on port {gw_port} proxying to port {toy_port}...")
+        gw_proc = start_server(
+            "gateway.mcp_gateway:app",
+            gw_port,
+            env={"FW_REAL_SERVER_URL": f"http://127.0.0.1:{toy_port}"},
+        )
+        await wait_for_server(gw_proc, gw_port, "Gateway")
+        print("Executing protected gateway attacks...")
+        protected_results = await execute_suite(f"http://127.0.0.1:{gw_port}", "protected")
+    finally:
+        stop_server(gw_proc)
+        stop_server(toy_proc)
     print("Protected gateway suite complete.")
 
     # 3. Print Results Table
@@ -497,5 +522,9 @@ async def main():
         
     print(f"\n**Summary Score: {caught}/{total} attacks caught ({int(caught/total*100)}%)**\n")
 
+def main() -> None:
+    asyncio.run(run_benchmark())
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
