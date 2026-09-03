@@ -3,10 +3,14 @@ import sys
 import json
 import socket
 import asyncio
+import contextlib
 import time
 import subprocess
-from typing import Dict, Any, List, Tuple
+from collections.abc import Awaitable, Callable
+from typing import Any, Literal
 from httpx import AsyncClient
+
+from benchmarking.models import AttackObservation, BenchmarkRun, InfrastructureError
 
 # Retrieve free port
 def get_free_port() -> int:
@@ -385,142 +389,205 @@ ATTACKS = [
     ("ASI10: Rogue Agents", 17, "alice", run_attack_17, "Session identity pollution check")
 ]
 
-async def execute_suite(base_url: str, mode: str) -> Dict[int, Tuple[bool, str]]:
-    results = {}
-    async with AsyncClient(base_url=base_url) as client_post:
+ObservationCallback = Callable[[AttackObservation], Awaitable[None] | None]
+
+
+def _evaluate_messages(
+    attack_id: int,
+    mode: Literal["standalone", "protected"],
+    parsed_messages: list[dict[str, Any]],
+) -> tuple[bool, str]:
+    """Keep the original harness verdict rules in one reusable helper."""
+    if mode == "standalone":
+        exploited = any(
+            "result" in package
+            or (
+                "error" in package
+                and "Security Policy Violation" not in package["error"].get("message", "")
+                and "IDENTITY_NOT_FOUND" not in package["error"].get("message", "")
+            )
+            for package in parsed_messages
+        )
+        if attack_id == 16:
+            exploited = True
+        return exploited, "Exploited" if exploited else "Blocked"
+
+    blocked = any(
+        "error" in package
+        and (
+            "Security Policy Violation" in package["error"].get("message", "")
+            or "IDENTITY_NOT_FOUND" in package["error"].get("message", "")
+        )
+        for package in parsed_messages
+    )
+    if attack_id == 17:
+        blocked = any(
+            "Security Policy Violation" in package.get("error", {}).get("message", "")
+            for package in parsed_messages
+        )
+    return blocked, "Blocked" if blocked else "Bypassed"
+
+
+async def execute_suite(
+    base_url: str,
+    mode: Literal["standalone", "protected"],
+    on_result: ObservationCallback | None = None,
+) -> dict[int, AttackObservation]:
+    """Run the original attack functions and return raw, structured observations."""
+    results: dict[int, AttackObservation] = {}
+    async with AsyncClient(base_url=base_url, timeout=10.0) as client_post:
         for cat, aid, identity, run_fn, desc in ATTACKS:
+            started_at = time.perf_counter()
             session_id = f"session_attack_{aid}_{mode}"
-            messages = []
-            
-            # Setup stream reader
+            messages: list[str] = []
+            stream_error: InfrastructureError | None = None
+
             async def read_sse():
+                nonlocal stream_error
                 try:
-                    async with AsyncClient(base_url=base_url) as client_sse:
+                    async with AsyncClient(base_url=base_url, timeout=10.0) as client_sse:
                         async with client_sse.stream("GET", f"/sse?identity={identity}&session_id={session_id}") as response:
+                            response.raise_for_status()
                             async for line in response.aiter_lines():
                                 if line.startswith("data:"):
                                     messages.append(line.split("data:", 1)[1].strip())
-                except Exception:
-                    pass
+                except asyncio.CancelledError:
+                    raise
+                except Exception as exc:
+                    stream_error = InfrastructureError(
+                        kind="connection_dropped", message=str(exc), retryable=True
+                    )
 
             sse_task = asyncio.create_task(read_sse())
-            await asyncio.sleep(0.3) # Wait for SSE registration
+            await asyncio.sleep(0.3)
+            request_accepted: bool | None = None
+            request_error: InfrastructureError | None = None
 
             try:
-                # Fire the exploit request
-                await run_fn(client_post, session_id, identity)
-                await asyncio.sleep(0.5) # Wait for processing
-            except Exception as e:
-                print(f"Error running attack {aid} in {mode}: {e}")
+                request_accepted = await run_fn(client_post, session_id, identity)
+                if not request_accepted:
+                    request_error = InfrastructureError(
+                        kind="unexpected_response",
+                        message="The target rejected the JSON-RPC request before producing a benchmark result.",
+                    )
+                await asyncio.sleep(0.5)
+            except Exception as exc:
+                request_error = InfrastructureError(
+                    kind="request_failed", message=str(exc), retryable=True
+                )
             finally:
                 sse_task.cancel()
+                with contextlib.suppress(asyncio.CancelledError):
+                    await sse_task
 
-            # Parse stream payloads
-            parsed_msgs = {}
+            parsed_messages: list[dict[str, Any]] = []
+            malformed_messages = 0
             for m in messages:
                 if not m.startswith("/message"):
                     try:
                         pkg = json.loads(m)
                         if "id" in pkg:
-                            parsed_msgs[pkg["id"]] = pkg
-                    except Exception:
-                        pass
+                            parsed_messages.append(pkg)
+                    except (TypeError, ValueError, json.JSONDecodeError):
+                        malformed_messages += 1
 
-            # Evaluate success criteria
-            if mode == "standalone":
-                # In standalone, we check if the exploit successfully executed
-                # i.e., returned result/stdout (or error was just an execution error, not policy block)
-                # Let's inspect the parsed responses
-                exploded = False
-                for mid, pkg in parsed_msgs.items():
-                    if "result" in pkg:
-                        # Success returned, exploit was successful
-                        exploded = True
-                    elif "error" in pkg:
-                        # Execution errors from python are expected, but security blocks are NOT
-                        msg_str = pkg["error"].get("message", "")
-                        if "Security Policy Violation" not in msg_str and "IDENTITY_NOT_FOUND" not in msg_str:
-                            exploded = True
-                
-                # Default true if no errors popped up or tool ran
-                if aid in (16,): # Flood check always runs
-                    exploded = True
-                    
-                results[aid] = (exploded, "Exploited" if exploded else "Blocked")
-            else:
-                # In gateway mode, we check if the gateway blocked the attack
-                blocked = False
-                for mid, pkg in parsed_msgs.items():
-                    if "error" in pkg:
-                        msg_str = pkg["error"].get("message", "")
-                        if "Security Policy Violation" in msg_str or "IDENTITY_NOT_FOUND" in msg_str:
-                            blocked = True
-                
-                # Special cases
-                if aid == 17:
-                    # Identity check blocks at request time, identity bob calling alice session
-                    # So error message is returned
-                    blocked = any("Security Policy Violation" in parsed_msgs.get(mid, {}).get("error", {}).get("message", "") for mid in parsed_msgs)
-                
-                results[aid] = (blocked, "Blocked" if blocked else "Bypassed")
+            error = request_error or stream_error
+            # Preserve the legacy empty-stream behavior (it was interpreted as a
+            # blocked attack) while treating malformed JSON-RPC as infrastructure.
+            if error is None and malformed_messages and not parsed_messages:
+                error = InfrastructureError(
+                    kind="invalid_response",
+                    message="The target produced malformed JSON-RPC response data.",
+                    retryable=False,
+                    details={"malformed_messages": malformed_messages},
+                )
+            expectation_met, outcome_label = _evaluate_messages(aid, mode, parsed_messages)
+            if error is not None:
+                expectation_met, outcome_label = False, "Error"
+            observation = AttackObservation(
+                attack_id=aid,
+                category=cat,
+                attack_name=desc,
+                mode=mode,
+                request_accepted=request_accepted,
+                messages=parsed_messages,
+                expectation_met=expectation_met,
+                outcome_label=outcome_label,
+                duration_ms=(time.perf_counter() - started_at) * 1000,
+                error=error,
+            )
+            results[aid] = observation
+            if on_result is not None:
+                callback_result = on_result(observation)
+                if hasattr(callback_result, "__await__"):
+                    await callback_result
     return results
 
-async def run_benchmark():
-    print("=== STARTING OWASP RED-TEAM BENCHMARK HARNESS ===")
+async def run_benchmark(
+    on_protected_result: ObservationCallback | None = None,
+    emit_output: bool = True,
+) -> BenchmarkRun:
+    """Execute the legacy baseline/protected flow and return data instead of text."""
+    if emit_output:
+        print("=== STARTING OWASP RED-TEAM BENCHMARK HARNESS ===")
     
     # 1. Spin up standalone Toy Server
     toy_port = get_free_port()
-    print(f"Launching Standalone Toy MCP Server on port {toy_port}...")
+    if emit_output:
+        print(f"Launching Standalone Toy MCP Server on port {toy_port}...")
     toy_proc = start_server("toy_server.toy_server:app", toy_port)
     try:
         await wait_for_server(toy_proc, toy_port, "Standalone toy server")
-        print("Executing standalone baseline attacks...")
+        if emit_output:
+            print("Executing standalone baseline attacks...")
         standalone_results = await execute_suite(f"http://127.0.0.1:{toy_port}", "standalone")
     finally:
         stop_server(toy_proc)
-    print("Standalone baseline suite complete.")
+    if emit_output:
+        print("Standalone baseline suite complete.")
     
     # 2. Spin up Toy Server + Gateway Proxy
     toy_port = get_free_port()
     gw_port = get_free_port()
-    print(f"Launching Backend Server on port {toy_port}...")
+    if emit_output:
+        print(f"Launching Backend Server on port {toy_port}...")
     toy_proc = start_server("toy_server.toy_server:app", toy_port)
     gw_proc = None
     try:
         await wait_for_server(toy_proc, toy_port, "Backend toy server")
-        print(f"Launching Gateway on port {gw_port} proxying to port {toy_port}...")
+        if emit_output:
+            print(f"Launching Gateway on port {gw_port} proxying to port {toy_port}...")
         gw_proc = start_server(
             "gateway.mcp_gateway:app",
             gw_port,
             env={"FW_REAL_SERVER_URL": f"http://127.0.0.1:{toy_port}"},
         )
         await wait_for_server(gw_proc, gw_port, "Gateway")
-        print("Executing protected gateway attacks...")
-        protected_results = await execute_suite(f"http://127.0.0.1:{gw_port}", "protected")
+        if emit_output:
+            print("Executing protected gateway attacks...")
+        protected_results = await execute_suite(
+            f"http://127.0.0.1:{gw_port}", "protected", on_protected_result
+        )
     finally:
         stop_server(gw_proc)
         stop_server(toy_proc)
-    print("Protected gateway suite complete.")
+    if emit_output:
+        print("Protected gateway suite complete.")
 
-    # 3. Print Results Table
-    print("\n\n# OWASP ASI Red-Team Benchmark Results\n")
-    print("| OWASP Category | Attack ID | Description | Standalone (Baseline) | Gateway (Protected) | Outcome |")
-    print("|---|---|---|---|---|---|")
-    
-    total = len(ATTACKS)
-    caught = 0
-    
-    for cat, aid, identity, run_fn, desc in ATTACKS:
-        std_ok, std_lbl = standalone_results.get(aid, (False, "Error"))
-        prot_ok, prot_lbl = protected_results.get(aid, (False, "Error"))
-        
-        outcome = "PASS" if prot_ok else "FAIL"
-        if prot_ok:
-            caught += 1
-            
-        print(f"| {cat} | {aid} | {desc} | {std_lbl} | {prot_lbl} | {outcome} |")
-        
-    print(f"\n**Summary Score: {caught}/{total} attacks caught ({int(caught/total*100)}%)**\n")
+    benchmark = BenchmarkRun(baseline=standalone_results, protected=protected_results)
+    if emit_output:
+        print("\n\n# OWASP ASI Red-Team Benchmark Results\n")
+        print("| OWASP Category | Attack ID | Description | Standalone (Baseline) | Gateway (Protected) | Outcome |")
+        print("|---|---|---|---|---|---|")
+        caught = 0
+        for cat, aid, identity, run_fn, desc in ATTACKS:
+            baseline = benchmark.baseline[aid]
+            protected = benchmark.protected[aid]
+            outcome = "PASS" if protected.expectation_met else "FAIL"
+            caught += protected.expectation_met
+            print(f"| {cat} | {aid} | {desc} | {baseline.outcome_label} | {protected.outcome_label} | {outcome} |")
+        print(f"\n**Summary Score: {caught}/{len(ATTACKS)} attacks caught ({int(caught/len(ATTACKS)*100)}%)**\n")
+    return benchmark
 
 def main() -> None:
     asyncio.run(run_benchmark())
