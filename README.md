@@ -162,6 +162,26 @@ variables are required.
 For a standard pip workflow, use `python -m pip install .` and then run
 `agentic-firewall`.
 
+### Scan an MCP server
+
+The scanner supports the two backend transports already implemented by the
+gateway. It starts and stops a temporary local policy gateway automatically,
+performs MCP `initialize` and `tools/list` preflight, then runs the existing
+17 attacks through that gateway.
+
+```bash
+# HTTP/SSE MCP server; URL is the server base, which must expose <URL>/sse.
+uv run agentic-firewall scan --server-url http://127.0.0.1:8000
+
+# Local stdio MCP server. The command is JSON argv, never shell syntax.
+uv run agentic-firewall scan --server-cmd '["python", "my_mcp_server.py"]'
+```
+
+`--server-url` rejects embedded credentials and query strings so secrets are
+not placed in output or reports. Authentication headers and WebSocket targets
+are not supported by the current gateway transport. The default command, with
+no target option, remains the built-in toy benchmark.
+
 ### Running Tests
 Execute the pytest suites:
 ```bash

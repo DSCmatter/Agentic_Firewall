@@ -589,6 +589,14 @@ async def run_benchmark(
         print(f"\n**Summary Score: {caught}/{len(ATTACKS)} attacks caught ({int(caught/len(ATTACKS)*100)}%)**\n")
     return benchmark
 
+
+async def run_protected_benchmark(
+    gateway_url: str,
+    on_result: ObservationCallback | None = None,
+) -> dict[int, AttackObservation]:
+    """Run the unchanged 17 attacks through a prepared gateway target."""
+    return await execute_suite(gateway_url, "protected", on_result)
+
 def main() -> None:
     asyncio.run(run_benchmark())
 

@@ -56,3 +56,7 @@ class ScanPresenter:
             f"[green]{score.passed} passed[/], [red]{score.failed} failed[/], "
             f"[yellow]{score.errored} infrastructure errors[/]"
         )
+        errors = [result for result in report.results if result.status == "ERROR"]
+        if errors:
+            kind = errors[0].evidence.get("infrastructure_error", {}).get("kind", "benchmark_execution_error")
+            self.console.print(f"[yellow]Scan incomplete:[/] {kind.replace('_', ' ')}")
