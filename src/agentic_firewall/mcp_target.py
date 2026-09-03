@@ -66,6 +66,7 @@ class McpTargetAdapter:
         self.timeout_s = timeout_s
         self.gateway_process = None
         self.gateway_url: str | None = None
+        self.available_tools: set[str] = set()
 
     async def __aenter__(self) -> "McpTargetAdapter":
         port = get_free_port()
@@ -101,7 +102,7 @@ class McpTargetAdapter:
                 "clientInfo": {"name": "agentic-firewall", "version": "0.1.0"},
             },
         }
-        async with _GatewaySseSession(self.gateway_url or "", self.timeout_s) as session:
+        async with _GatewaySseSession(self.gateway_url or "", self.timeout_s, identity="__probe__") as session:
             response = await session.request(initialize)
             if not isinstance(response.get("result"), dict):
                 self._raise_preflight_error(response, "MCP initialize did not return a valid result.")
@@ -109,6 +110,12 @@ class McpTargetAdapter:
             tools = await session.request({"jsonrpc": "2.0", "id": 9002, "method": "tools/list", "params": {}})
             if not isinstance(tools.get("result"), dict) or not isinstance(tools["result"].get("tools"), list):
                 self._raise_preflight_error(tools, "MCP tools/list did not return a valid tools array.")
+            raw_tools = tools["result"]["tools"]
+            self.available_tools = {
+                t.get("name")
+                for t in raw_tools
+                if isinstance(t, dict) and isinstance(t.get("name"), str)
+            }
 
     def _raise_preflight_error(self, response: dict[str, Any], fallback: str) -> None:
         text = str(response.get("error", {}).get("message", "")).lower()
@@ -122,9 +129,10 @@ class McpTargetAdapter:
 class _GatewaySseSession:
     """Small reusable client for the gateway's existing SSE/message transport."""
 
-    def __init__(self, gateway_url: str, timeout_s: float) -> None:
+    def __init__(self, gateway_url: str, timeout_s: float, identity: str = "__probe__") -> None:
         self.gateway_url = gateway_url
         self.timeout_s = timeout_s
+        self.identity = identity
         self.session_id = "scan_preflight"
         self.client: httpx.AsyncClient | None = None
         self.stream_context = None
@@ -135,7 +143,7 @@ class _GatewaySseSession:
 
     async def __aenter__(self) -> "_GatewaySseSession":
         self.client = httpx.AsyncClient(base_url=self.gateway_url, timeout=self.timeout_s)
-        self.stream_context = self.client.stream("GET", f"/sse?identity=alice&session_id={self.session_id}")
+        self.stream_context = self.client.stream("GET", f"/sse?identity={self.identity}&session_id={self.session_id}")
         response = await self.stream_context.__aenter__()
         try:
             response.raise_for_status()
@@ -204,7 +212,7 @@ class _GatewaySseSession:
         if self.client is None:
             raise TargetPreflightError("benchmark_execution_error", "The scan gateway is not running.")
         try:
-            posted = await self.client.post(f"/message?session_id={self.session_id}&identity=alice", json=message)
+            posted = await self.client.post(f"/message?session_id={self.session_id}&identity={self.identity}", json=message)
             if posted.status_code != 202:
                 if posted.status_code in {401, 403}:
                     raise TargetPreflightError("authentication_failure", "The MCP target rejected authentication.")

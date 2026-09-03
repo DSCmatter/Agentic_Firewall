@@ -80,7 +80,7 @@ async def test_preflight_timeout_error(monkeypatch):
         async def notify(self, msg):
             pass
 
-    monkeypatch.setattr("agentic_firewall.mcp_target._GatewaySseSession", lambda url, timeout: FakeSession())
+    monkeypatch.setattr("agentic_firewall.mcp_target._GatewaySseSession", lambda *args, **kwargs: FakeSession())
     with pytest.raises(TargetPreflightError) as exc_info:
         await adapter.preflight()
     assert exc_info.value.kind == "timeout"
@@ -106,7 +106,7 @@ async def test_preflight_malformed_response_error(monkeypatch):
         async def notify(self, msg):
             pass
 
-    monkeypatch.setattr("agentic_firewall.mcp_target._GatewaySseSession", lambda url, timeout: FakeSession())
+    monkeypatch.setattr("agentic_firewall.mcp_target._GatewaySseSession", lambda *args, **kwargs: FakeSession())
     with pytest.raises(TargetPreflightError) as exc_info:
         await adapter.preflight()
     assert exc_info.value.kind == "mcp_handshake_failure"

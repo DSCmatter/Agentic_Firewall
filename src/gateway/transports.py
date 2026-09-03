@@ -74,10 +74,11 @@ async def listen_to_stdio_backend(session_id: str, identity: str, proc: asyncio.
             if isinstance(msg.get("result"), dict) and msg["result"].get("tools"):
                 policy_engine.policy = load_policy()
                 tool_policy = policy_engine.policy.identities.get(identity)
-                allowed = set(tool_policy.allowed_tools) if tool_policy else set()
-                filtered = [t for t in msg["result"]["tools"] if t.get("name") in allowed]
-                msg["result"]["tools"] = filtered
-                line_str = json.dumps(msg)
+                if identity != "__probe__" and tool_policy is not None:
+                    allowed = set(tool_policy.allowed_tools)
+                    filtered = [t for t in msg["result"]["tools"] if t.get("name") in allowed]
+                    msg["result"]["tools"] = filtered
+                    line_str = json.dumps(msg)
 
             # Intercept tools/call response
             is_tool_result = (
@@ -169,9 +170,10 @@ async def listen_to_backend_stream(session_id: str, identity: str, response: htt
                     if msg.get("result", {}).get("tools"):
                         policy_engine.policy = load_policy()
                         tool_policy = policy_engine.policy.identities.get(identity)
-                        allowed = set(tool_policy.allowed_tools) if tool_policy else set()
-                        filtered = [t for t in msg["result"]["tools"] if t.get("name") in allowed]
-                        msg["result"]["tools"] = filtered
+                        if identity != "__probe__" and tool_policy is not None:
+                            allowed = set(tool_policy.allowed_tools)
+                            filtered = [t for t in msg["result"]["tools"] if t.get("name") in allowed]
+                            msg["result"]["tools"] = filtered
                         data_val = json.dumps(msg)
 
                     # Intercept tools/call response

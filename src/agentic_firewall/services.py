@@ -31,10 +31,19 @@ class ScanReport:
         }
 
 
+DEFAULT_BENCHMARK_TOOLS = {
+    "read_file",
+    "write_file",
+    "execute_command",
+    "fetch_url",
+    "query_database",
+}
+
+
 async def run_local_scan(on_result: ResultCallback | None = None) -> ScanReport:
     """Run the existing baseline/protected benchmark and expose protected results."""
     async def on_protected_observation(observation: AttackObservation) -> None:
-        result = normalize_protected_result(observation)
+        result = normalize_protected_result(observation, available_tools=DEFAULT_BENCHMARK_TOOLS)
         if on_result is not None:
             callback_result = on_result(result)
             if hasattr(callback_result, "__await__"):
@@ -46,7 +55,11 @@ async def run_local_scan(on_result: ResultCallback | None = None) -> ScanReport:
     )
     baseline_by_id = benchmark.baseline
     results = [
-        normalize_protected_result(protected, baseline_by_id.get(attack_id))
+        normalize_protected_result(
+            protected,
+            baseline_by_id.get(attack_id),
+            available_tools=DEFAULT_BENCHMARK_TOOLS,
+        )
         for attack_id, protected in sorted(benchmark.protected.items())
     ]
     return ScanReport(
@@ -61,8 +74,10 @@ async def run_mcp_target_scan(
     on_result: ResultCallback | None = None,
 ) -> ScanReport:
     """Preflight an MCP server and run existing attacks through the gateway proxy."""
+    available_tools: set[str] = set()
+
     async def on_protected_observation(observation: AttackObservation) -> None:
-        result = normalize_protected_result(observation)
+        result = normalize_protected_result(observation, available_tools=available_tools)
         if on_result is not None:
             callback_result = on_result(result)
             if hasattr(callback_result, "__await__"):
@@ -71,6 +86,7 @@ async def run_mcp_target_scan(
     try:
         async with McpTargetAdapter(config) as target:
             await target.preflight()
+            available_tools = target.available_tools
             protected = await run_protected_benchmark(
                 target.gateway_url or "", on_protected_observation
             )
@@ -78,7 +94,7 @@ async def run_mcp_target_scan(
         return _infrastructure_report(config, exc)
 
     results = [
-        normalize_protected_result(observation)
+        normalize_protected_result(observation, available_tools=available_tools)
         for _, observation in sorted(protected.items())
     ]
     return ScanReport(results, calculate_security_score(results), config.public_description())
@@ -96,7 +112,9 @@ def _infrastructure_report(config: McpTargetConfig, error: TargetPreflightError)
             explanation="Benchmark not executed because MCP target preflight failed.",
             evidence={"infrastructure_error": InfrastructureError(error.kind, error.message).to_dict()},
             duration_ms=0.0,
+            protection_source="NONE",
         )
         for category, attack_id, identity, runner, name in ATTACKS
     ]
     return ScanReport(results, calculate_security_score(results), config.public_description())
+

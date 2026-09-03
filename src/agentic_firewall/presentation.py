@@ -10,7 +10,22 @@ from benchmarking.models import NormalizedAttackResult
 from agentic_firewall.services import ScanReport
 
 
-_STATUS_STYLE = {"PASS": "green", "FAIL": "bold red", "ERROR": "yellow", "SKIPPED": "dim"}
+from rich.markup import escape
+
+_STATUS_STYLE = {
+    "PASS": "green",
+    "VULNERABLE": "bold red",
+    "ERROR": "yellow",
+    "SKIPPED": "dim",
+    "NOT_APPLICABLE": "cyan",
+}
+_SOURCE_STYLE = {
+    "FIREWALL": "bold green",
+    "TARGET": "blue",
+    "BOTH": "bold cyan",
+    "NONE": "dim",
+    "UNKNOWN": "yellow",
+}
 
 
 class ScanPresenter:
@@ -40,23 +55,45 @@ class ScanPresenter:
         table.add_column("Attack")
         table.add_column("Severity")
         table.add_column("Status")
+        table.add_column("Protection")
         table.add_column("Duration", justify="right")
         for result in report.results:
+            status_style = _STATUS_STYLE.get(result.status, "white")
+            source_style = _SOURCE_STYLE.get(result.protection_source, "white")
             table.add_row(
-                str(result.attack_id), result.attack_name, result.severity.upper(),
-                f"[{_STATUS_STYLE[result.status]}]{result.status}[/]",
+                str(result.attack_id),
+                escape(result.attack_name),
+                escape(result.severity.upper()),
+                f"[{status_style}]{escape(result.status)}[/]",
+                f"[{source_style}]{escape(result.protection_source)}[/]",
                 f"{result.duration_ms:.0f} ms",
             )
         self.console.print(table)
         score = report.security_score
-        score_style = "green" if score.score >= 80 else "red"
-        self.console.print(
-            f"[bold]Security Score:[/] [{score_style}]"
-            f"{score.score}/100 ({score.grade})[/]  "
-            f"[green]{score.passed} passed[/], [red]{score.failed} failed[/], "
-            f"[yellow]{score.errored} infrastructure errors[/]"
-        )
-        errors = [result for result in report.results if result.status == "ERROR"]
-        if errors:
-            kind = errors[0].evidence.get("infrastructure_error", {}).get("kind", "benchmark_execution_error")
-            self.console.print(f"[yellow]Scan incomplete:[/] {kind.replace('_', ' ')}")
+        if score.score_status == "INCOMPLETE":
+            self.console.print(
+                f"[bold]Security Score:[/] [yellow]N/A ({score.grade})[/]  "
+                f"[bold]Attack Coverage:[/] {score.attack_coverage}  "
+                f"[green]{score.passed} passed[/], [red]{score.vulnerable} vulnerable[/], "
+                f"[yellow]{score.errored} errors[/]"
+            )
+            errors = [result for result in report.results if result.status == "ERROR"]
+            if errors:
+                kind = errors[0].evidence.get("infrastructure_error", {}).get("kind", "benchmark_execution_error")
+                self.console.print(f"[bold yellow]Scan Status: INCOMPLETE[/] ({kind.replace('_', ' ')})")
+        elif score.applicable_tests == 0:
+            self.console.print(
+                f"[bold]Security Score:[/] [dim]N/A[/]  "
+                f"[bold]Attack Coverage:[/] {score.attack_coverage}  "
+                f"[cyan]{score.not_applicable} not applicable[/]"
+            )
+        else:
+            score_val = score.score if score.score is not None else 0
+            score_style = "green" if score_val >= 80 else "red"
+            self.console.print(
+                f"[bold]Security Score:[/] [{score_style}]{score_val}/100 ({score.grade})[/]  "
+                f"[bold]Attack Coverage:[/] {score.attack_coverage}  "
+                f"[green]{score.passed} passed[/], [red]{score.vulnerable} vulnerable[/]"
+                + (f", [cyan]{score.not_applicable} not applicable[/]" if score.not_applicable else "")
+            )
+

@@ -48,6 +48,10 @@ class BenchmarkRun:
     protected: dict[int, AttackObservation]
 
 
+ResultStatus = Literal["PASS", "VULNERABLE", "ERROR", "SKIPPED", "NOT_APPLICABLE"]
+ProtectionSource = Literal["FIREWALL", "TARGET", "BOTH", "NONE", "UNKNOWN"]
+
+
 @dataclass
 class NormalizedAttackResult:
     """Stable security result intended for consumers such as the Stage 1 CLI."""
@@ -56,10 +60,11 @@ class NormalizedAttackResult:
     attack_name: str
     category: str
     severity: str
-    status: Literal["PASS", "FAIL", "ERROR", "SKIPPED"]
+    status: ResultStatus
     explanation: str
     evidence: dict[str, Any]
     duration_ms: float
+    protection_source: ProtectionSource = "UNKNOWN"
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -68,7 +73,9 @@ class NormalizedAttackResult:
             "category": self.category,
             "severity": self.severity,
             "status": self.status,
+            "protection_source": self.protection_source,
             "explanation": self.explanation,
             "evidence": self.evidence,
             "duration_ms": round(self.duration_ms, 2),
         }
+

@@ -58,7 +58,6 @@ def scan(output: Path | None, output_format: str, server_url: str | None, server
         if output is not None:
             console.print(f"Report saved: [cyan]{output}[/]")
 
-    if report.security_score.failed:
-        raise click.exceptions.Exit(1)
     if report.security_score.errored:
-        raise click.exceptions.Exit(2)
+        raise click.exceptions.Exit(1)
+

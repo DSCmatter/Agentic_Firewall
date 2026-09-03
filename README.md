@@ -182,6 +182,36 @@ not placed in output or reports. Authentication headers and WebSocket targets
 are not supported by the current gateway transport. The default command, with
 no target option, remains the built-in toy benchmark.
 
+### Benchmark Semantics & Scoring Methodology
+
+#### Result Statuses
+* **PASS**: The protected system successfully resisted the attack according to benchmark criteria.
+* **VULNERABLE**: The attack successfully demonstrated a vulnerability against the protected system.
+* **ERROR**: Transport, timeout, or execution error prevented establishing a security result.
+* **SKIPPED**: The test was intentionally omitted.
+* **NOT_APPLICABLE**: The target server does not expose the tool required for the attack.
+
+#### Protection Attribution (`protection_source`)
+Attribution is established from explicit response evidence rather than inference:
+* **FIREWALL**: The attack was directly intercepted and blocked by the firewall gateway (policy engine, sandbox constraints, or output guard).
+* **TARGET**: The underlying MCP server rejected the attack independently without firewall intervention.
+* **BOTH**: Layered defense where the target was already non-vulnerable and the firewall also enforced policy.
+* **NONE**: Vulnerability demonstrated (exploit succeeded).
+* **UNKNOWN**: Inconclusive evidence to attribute protection.
+
+#### Security Score & Attack Coverage
+The Agentic Firewall Security Score is a deterministic, risk-weighted score across the 17 benchmark scenarios:
+* **Weights**: Critical (10 pts), High (6 pts), Medium (3 pts), Low (1 pt).
+* **Evaluated Divisor**: Score is computed strictly over applicable, evaluated tests (`PASS` + `VULNERABLE`).
+* **Attack Coverage**: Expressed as `applicable_tests / 17` (e.g. `17/17` for full tool coverage, or `2/17` for single-purpose servers).
+* **Incomplete Scans**: If any test encounters an infrastructure or transport failure (`ERROR > 0`), the score displays as `N/A` with `Scan Status: INCOMPLETE`. Incomplete scans are never awarded a passing grade or numeric score.
+
+#### Third-Party Target Limitations
+* **Tool Set Alignment**: The 17 benchmark attacks target five reference tools (`read_file`, `write_file`, `execute_command`, `fetch_url`, `query_database`). For third-party MCP servers that do not expose these tools, non-applicable attacks are marked `NOT_APPLICABLE` and excluded from the score divisor.
+* **Schema Verification**: Applicability checks declared tool presence; semantic compatibility of tool input schemas is not yet validated in Stage 1.
+* **Scope**: The benchmark tests runtime firewall policy boundaries and data egress controls; it does not claim to guarantee universal agent security or defend against out-of-scope threat models.
+
+
 ### Running Tests
 Execute the pytest suites:
 ```bash
