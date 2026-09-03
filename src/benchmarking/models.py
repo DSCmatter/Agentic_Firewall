@@ -65,6 +65,8 @@ class NormalizedAttackResult:
     evidence: dict[str, Any]
     duration_ms: float
     protection_source: ProtectionSource = "UNKNOWN"
+    # Only populated for VULNERABLE findings. None for PASS / ERROR / NOT_APPLICABLE.
+    remediation: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -75,6 +77,7 @@ class NormalizedAttackResult:
             "status": self.status,
             "protection_source": self.protection_source,
             "explanation": self.explanation,
+            "remediation": self.remediation,
             "evidence": self.evidence,
             "duration_ms": round(self.duration_ms, 2),
         }

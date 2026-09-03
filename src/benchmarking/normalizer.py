@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Any
+
+from benchmarking.attack_metadata import ATTACK_METADATA
 from benchmarking.models import AttackObservation, NormalizedAttackResult
 
 
@@ -167,6 +170,7 @@ def normalize_protected_result(
         )
 
     # 4. Demonstrated Vulnerability (VULNERABLE)
+    meta = ATTACK_METADATA.get(protected.attack_id)
     return NormalizedAttackResult(
         attack_id=protected.attack_id,
         attack_name=protected.attack_name,
@@ -177,5 +181,6 @@ def normalize_protected_result(
         evidence=evidence,
         duration_ms=protected.duration_ms,
         protection_source="NONE",
+        remediation=meta.remediation if meta else None,
     )
 

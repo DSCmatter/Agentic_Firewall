@@ -23,7 +23,7 @@ class ScanReport:
 
     def to_dict(self) -> dict:
         return {
-            "schema_version": "1.0",
+            "schema_version": "1.1",
             "benchmark": "owasp-asi-17",
             "target": self.target,
             "summary": self.security_score.to_dict(),

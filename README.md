@@ -134,6 +134,132 @@ The gateway was evaluated against an independent red-team harness executing **17
 
 ---
 
+## 3.1 Scanner CLI
+
+The `scan` subcommand runs the 17-attack benchmark against either the built-in toy server or a third-party MCP target. The output mode is selectable; the JSON contract is stable and versioned.
+
+### Flags
+
+| Flag | Effect |
+|---|---|
+| `--format rich` *(default)* | Interactive table, findings panel, score banner. |
+| `--format json` | Pure JSON document on stdout. Progress and warnings go to stderr. Suitable for CI / piping. |
+| `--output <path>` | Persist the JSON report to a file (independent of stdout format). |
+| `--server-url <url>` | Scan an HTTP/SSE MCP server (URL base, must expose `<URL>/sse`). |
+| `--server-cmd '<json argv>'` | Scan a local stdio MCP server (JSON array, never shell syntax). |
+| `--no-progress` | Suppress the animated progress bar (useful for non-interactive / CI). |
+| `--quiet` / `-q` | Compact output: score, coverage, vulnerabilities only. No header, no per-attack table. |
+| `--fail-on <critical\|high\|medium\|low>` | Cumulative severity gate. Exits `1` if any vulnerability at or above the threshold is found. Default: no gate (exit `0` even with findings). |
+
+### Exit Codes
+
+| Code | Meaning |
+|---|---|
+| `0` | Scan completed. No vulnerabilities, or vulnerabilities found but `--fail-on` threshold not met. |
+| `1` | Infrastructure error (one or more attacks returned `ERROR`), **or** `--fail-on` threshold was met. |
+| `2` | Usage / configuration error (bad target URL, missing argument). |
+
+`--fail-on` never alters the displayed score, findings, coverage, or JSON output — it only changes the process exit code.
+
+### Example: successful scan (17/17 PASS)
+
+```text
+Agentic Firewall  Security Scan
+  Target:   Local Toy Benchmark (MCP SSE via gateway)
+  Attacks:  17 scenarios across OWASP ASI02–ASI10
+
+  Running attacks ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 17/17
+
+     Attack                                      Severity  Status          Protection     Duration
+✓    Absolute Path Traversal via read_file       HIGH      PASS            FIREWALL         810 ms
+✓    Relative Path Traversal via read_file       HIGH      PASS            FIREWALL         808 ms
+✓    Unauthorized File Modification via          HIGH      PASS            FIREWALL         793 ms
+     write_fil…
+✓    SQL Injection on query_database             HIGH      PASS            FIREWALL         808 ms
+… (13 more rows) …
+
+  Security Score   100/100  (A)
+  Attack Coverage  17/17
+  Vulnerabilities  0
+```
+
+### Example: incomplete scan (target unreachable)
+
+```text
+Agentic Firewall  Security Scan
+  Target:   HTTP/SSE MCP server  http://127.0.0.1:1
+  Attacks:  17 scenarios across OWASP ASI02–ASI10
+
+  Running attacks ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0/17
+
+  Security Score   N/A
+  Scan Status      INCOMPLETE
+  Attack Coverage  0/17
+  Errors           17 (target unavailable)
+
+  Tip: Verify the target is reachable and retry. Use --format json for machine-readable diagnostics.
+```
+
+### Example: partial coverage (limited tool set)
+
+When the target MCP server does not expose all five reference tools, only the applicable attacks are evaluated; the remainder are reported as `NOT_APPLICABLE`.
+
+```text
+  Security Score   100/100  (A)
+  Attack Coverage  2/17
+  Vulnerabilities  0
+  Not Applicable   15  (target does not expose the required tools)
+```
+
+### Security findings
+
+For each `VULNERABLE` finding, the interactive output adds a compact findings panel with severity, OWASP category, protection source, evidence snippet, and a concrete remediation hint tied to `policy_v2.json`:
+
+```text
+────── SECURITY FINDINGS ───────────────────────────────────────────
+
+  CRITICAL  Command Shell Injection            Attack #9
+            OWASP:       ASI05: Unexpected Code Exec
+            Protection:  NONE
+            Evidence:    …exploit succeeded…
+            Remediation: Revoke execute_command from untrusted identities in policy_v2.json…
+
+  HIGH      SQL Injection on query_database    Attack #4
+            …
+```
+
+`--quiet` mode shows only the severity ladder and attack names — full remediation guidance is reserved for the JSON report (which includes the `remediation` field per result) and the interactive view.
+
+### JSON contract
+
+`--format json` emits a single document with `schema_version: "1.1"`. Top-level keys:
+
+```json
+{
+  "schema_version": "1.1",
+  "benchmark": "owasp-asi-17",
+  "target": { "kind": "...", "transport": "..." },
+  "summary": { "score": 100, "grade": "A", "score_status": "COMPLETE",
+               "attack_coverage": "17/17", "passed": 17, "vulnerable": 0,
+               "errored": 0, "skipped": 0, "not_applicable": 0,
+               "findings_by_severity": {...}, "findings_by_category": {...} },
+  "results": [
+    { "attack_id": 1, "attack_name": "...", "category": "...", "severity": "high",
+      "status": "PASS", "protection_source": "FIREWALL",
+      "explanation": "...", "remediation": null,
+      "evidence": { ... }, "duration_ms": 815.98 }
+  ]
+}
+```
+
+For `VULNERABLE` results the `remediation` field is a non-null string recommending the specific `policy_v2.json` change. For `PASS`, `ERROR`, `NOT_APPLICABLE`, `SKIPPED` results `remediation` is `null`.
+
+### Terminal safety
+
+All target-controlled text (attack names, evidence values, error messages) passes through a sanitizer before being rendered: ANSI / OSC control sequences are stripped, Rich markup is escaped, and output is bounded to 4 lines / 240 characters per field. JSON output is **never** sanitized — raw evidence is preserved in full for machine consumers.
+
+---
+
 ## 4. Documented Limitations
 
 The Agentic Firewall v2 focuses on system-level tool execution boundaries and data egress protection. It does not defend against the following OWASP categories:
@@ -151,7 +277,7 @@ The Agentic Firewall v2 focuses on system-level tool execution boundaries and da
 ```bash
 git clone <your-repository-url> && cd Agentic_Firewall
 uv sync
-uv run agentic-firewall
+uv run agentic-firewall scan
 ```
 
 `agentic-firewall` selects free local ports, starts the toy server and gateway,
