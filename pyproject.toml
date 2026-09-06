@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agentic-firewall"
-version = "0.1.0"
+dynamic = ["version"]
 description = "MCP policy gateway and red-team benchmark harness"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -31,6 +31,9 @@ agentic-firewall = "agentic_firewall.cli:main"
 [tool.setuptools]
 package-dir = { "" = "src" }
 include-package-data = true
+
+[tool.setuptools.dynamic]
+version = { attr = "agentic_firewall.__version__" }
 
 [tool.setuptools.packages.find]
 where = ["src"]

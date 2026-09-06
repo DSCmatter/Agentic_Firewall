@@ -51,22 +51,22 @@ class SessionManager:
     def get_identity(self, session_id: str) -> str:
         return self.identities.get(session_id, "anonymous")
 
-    def remove_session(self, session_id: str):
+    async def remove_session(self, session_id: str):
         self.queues.pop(session_id, None)
         self.identities.pop(session_id, None)
         self.backend_urls.pop(session_id, None)
         proc = self.processes.pop(session_id, None)
         if proc:
-            async def terminate_proc():
+            if proc.returncode is None:
                 try:
                     proc.terminate()
-                    await proc.wait()
-                except Exception:
+                    await asyncio.wait_for(proc.wait(), timeout=2.0)
+                except (asyncio.TimeoutError, ProcessLookupError):
                     try:
                         proc.kill()
-                    except Exception:
+                        await asyncio.wait_for(proc.wait(), timeout=2.0)
+                    except (asyncio.TimeoutError, ProcessLookupError):
                         pass
-            asyncio.create_task(terminate_proc())
 
 session_manager = SessionManager()
 

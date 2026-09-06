@@ -11,6 +11,7 @@ from urllib.parse import urlsplit, urlunsplit
 
 import httpx
 
+from agentic_firewall import __version__
 from benchmarking.attack_harness import get_free_port, start_server, stop_server, wait_for_server
 
 
@@ -99,7 +100,7 @@ class McpTargetAdapter:
             "jsonrpc": "2.0", "id": 9001, "method": "initialize",
             "params": {
                 "protocolVersion": "2024-11-05", "capabilities": {},
-                "clientInfo": {"name": "agentic-firewall", "version": "0.1.0"},
+                "clientInfo": {"name": "agentic-firewall", "version": __version__},
             },
         }
         async with _GatewaySseSession(self.gateway_url or "", self.timeout_s, identity="__probe__") as session:

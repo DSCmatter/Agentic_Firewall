@@ -117,9 +117,11 @@ async def sse_endpoint(
         finally:
             if backend_task:
                 backend_task.cancel()
+                await asyncio.gather(backend_task, return_exceptions=True)
             if stderr_task:
                 stderr_task.cancel()
-            session_manager.remove_session(session_id)
+                await asyncio.gather(stderr_task, return_exceptions=True)
+            await session_manager.remove_session(session_id)
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
@@ -622,8 +624,11 @@ async def websocket_endpoint(
         pass
     finally:
         send_task.cancel()
+        await asyncio.gather(send_task, return_exceptions=True)
         if backend_task:
             backend_task.cancel()
+            await asyncio.gather(backend_task, return_exceptions=True)
         if stderr_task:
             stderr_task.cancel()
-        session_manager.remove_session(session_id)
+            await asyncio.gather(stderr_task, return_exceptions=True)
+        await session_manager.remove_session(session_id)

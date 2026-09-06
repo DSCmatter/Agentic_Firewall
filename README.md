@@ -237,6 +237,7 @@ For each `VULNERABLE` finding, the interactive output adds a compact findings pa
 ```json
 {
   "schema_version": "1.1",
+  "scanner": { "name": "agentic-firewall", "version": "0.1.0" },
   "benchmark": "owasp-asi-17",
   "target": { "kind": "...", "transport": "..." },
   "summary": { "score": 100, "grade": "A", "score_status": "COMPLETE",

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import json
+from importlib.metadata import version as package_version
 import re
 from typing import Any
 
@@ -202,6 +203,7 @@ def test_json_output_schema_fields():
     # Top-level fields
     for field in ("schema_version", "benchmark", "target", "summary", "results"):
         assert field in data, f"Missing top-level field: {field}"
+    assert data["scanner"] == {"name": "agentic-firewall", "version": package_version("agentic-firewall")}
 
     # Summary fields
     summary = data["summary"]

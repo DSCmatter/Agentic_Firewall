@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 
+from agentic_firewall import __version__
 from benchmarking.attack_harness import ATTACKS, run_benchmark, run_protected_benchmark
 from benchmarking.models import AttackObservation, InfrastructureError, NormalizedAttackResult
 from benchmarking.normalizer import normalize_protected_result
@@ -24,6 +25,7 @@ class ScanReport:
     def to_dict(self) -> dict:
         return {
             "schema_version": "1.1",
+            "scanner": {"name": "agentic-firewall", "version": __version__},
             "benchmark": "owasp-asi-17",
             "target": self.target,
             "summary": self.security_score.to_dict(),
