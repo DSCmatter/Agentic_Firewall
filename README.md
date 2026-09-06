@@ -1,645 +1,274 @@
 # Agentic Firewall
 
-**MCP Policy Gateway & Independent OWASP Red-Team Security Benchmark**
+**MCP security middleware + automated security testing for AI agents.**
 
-Inspired by [Anthropic's Security Research](https://www.anthropic.com/news/disrupting-AI-espionage)
+Agentic Firewall sits between an AI agent or MCP client and an MCP server. It
+can enforce runtime policies and automatically test the server's tool-use
+attack surface with 17 OWASP ASI scenarios. It runs locally and sends no
+telemetry.
 
----
+## Why
 
-## The Problem
+MCP gives agents access to tools, but the connection does not by itself
+enforce least privilege. A compromised tool, prompt injection, or confused
+identity can lead to unauthorized tool use, privilege abuse, path traversal,
+command execution, data exfiltration, or session identity abuse.
 
-Recent security research revealed a critical vulnerability in AI coding environments: autonomous AI agents can be compromised when they connect to unverified tools and execute requests without human oversight. The attack succeeded because there was no governance layer to validate intent before execution.
+## Architecture
 
-## The Solution
-
-Agentic Firewall is a runtime security middleware and red-team benchmark harness designed to secure Model Context Protocol (MCP) applications. It acts as an intercepting proxy between an MCP client (AI agent) and any MCP server — enforcing least-privilege tool policies, pinned session identity, output guard canary scanning, and a counter-based circuit breaker.
-
-## Why This Matters
-
-In an era where AI agents are becoming increasingly autonomous, security can't be an afterthought. Agentic Firewall provides the governance layer needed to safely leverage AI assistance without sacrificing control — validating every tool call, logging every decision, and suspending sessions that exhibit rogue behavior.
-
----
-
-## 1. System Architecture
-
-The gateway acts as an intercepting proxy between the MCP Client (Agent) and the MCP Server. It intercepts and filters `tools/call` JSON-RPC requests, while passing other messages (`initialize`, etc.) through safely.
-
-### Supported Transports & Connection Modes
-
-* **Client-to-Gateway Transports**:
-  * **HTTP/SSE**: Standard Model Context Protocol SSE stream (e.g. `GET /sse?identity=alice`).
-  * **WebSocket**: Full-duplex connection via `ws://` to `/ws?identity=alice` WebSocket endpoint.
-* **Gateway-to-Server Connection Modes**:
-  * **Stdio Subprocess Proxy (Local)**: Spawns the backend MCP server as a local subprocess directly (e.g. SQLite, Git, or filesystem servers), proxying communication through standard input/output pipes (`stdin`/`stdout`). Configure using `FW_REAL_SERVER_CMD`.
-  * **HTTP/SSE Proxy (Remote)**: Proxies JSON-RPC messages over HTTP/SSE network endpoints to an external backend server. Configure using `FW_REAL_SERVER_URL`.
-
-```
-┌────────────────────────────────────────────────────────────────┐
-│                    MCP Client (AI Agent)                       │
-└───────────┬──────────────────────────────────────▲────────────┘
-            │  1. HTTP/SSE or WebSocket connection │ 4. Events / Responses
-            ▼                                      │
-┌───────────────────────────────────────────────────────────────┐
-│                      POLICY GATEWAY                           │
-│                                                               │
-│  ┌─────────────────────────────────────────────────────────┐  │
-│  │  → Pinned Session Identity Verification                 │  │
-│  │  → Pydantic Policy Engine (per-identity allow-list)     │  │
-│  │  → Argument Constraint Enforcement (sandbox paths etc.) │  │
-│  │  → Output Guard Canary Scanner (data egress detection)  │  │
-│  │  → Counter-Based Circuit Breaker (session suspension)   │  │
-│  └─────────────────────────────────────────────────────────┘  │
-│                         ↓ AUDIT LOG ↓                         │
-│              src/gateway/gateway_audit.log (JSONL)            │
-└───────────┬──────────────────────────────────────▲────────────┘
-            │  2. Local Subprocess Stdio (stdin)   │ 3. Stdout / SSE events
-            │     or Remote SSE GET /sse           │
-            ▼                                      │
-┌────────────────────────────────────────────────────────────────┐
-│                   BACKEND MCP SERVER                           │
-│         shell exec · file read/write · outbound HTTP           │
-└────────────────────────────────────────────────────────────────┘
+```text
+AI Agent / MCP Client
+          |
+          v
+  Agentic Firewall
+          |
+          v
+       MCP Server
 ```
 
-### Core Protection Layers
+The runtime firewall provides:
 
-1. **Least-Privilege Pydantic Policies**: Evaluates incoming tool requests against a strict `identity -> allowed_tools -> arg_constraints` schema. Out-of-bounds paths or unallowed tools are blocked instantly.
-2. **Pinned Session Identity Verification**: Binds the identity verified at session startup to all incoming messages on that session ID, completely mitigating session identity pollution and parameter tampering attacks.
-3. **Outbound Output Guard Canary Scanner**: Scans all tool response texts for sensitive canary patterns—such as Linux shadow databases, private SSH keys, cloud tokens, and system INI files—blocking leaks at the proxy level.
-4. **Stateful Circuit Breaker**: Tracks security flags per session. If a session triggers the Output Guard 3 consecutive times, the gateway suspends the session and rejects all subsequent execution requests.
-5. **JSON Lines Audit Logging**: Logs every execution step, request details, and security decision in a structured JSON Lines format to `src/gateway/gateway_audit.log`.
+- least-privilege tool policies;
+- session identity binding;
+- argument and sandbox path constraints;
+- output guard checks for sensitive or injected content;
+- a circuit breaker for repeated security flags; and
+- structured audit logging.
 
----
+## Quickstart
 
-## 2. Directory Structure
-
-The codebase is organized into a modular, clean directory layout:
-
-```
-src/
-  gateway/
-    mcp_gateway.py        # Gateway server router (HTTP/SSE and WebSockets)
-    state.py              # Log configurations, circuit breaker & session state
-    transports.py         # Subprocess piping and stream reader loops
-    mock_server.py        # Mock tool execution fallback simulation
-    policy_v2.json        # Pydantic Policy Schemes Configuration
-  toy_server/
-    toy_server.py         # Target MCP Vulnerability Testbed Server
-  benchmarking/
-    attack_harness.py     # Red-Team OWASP benchmark runner
-  security/
-    policy_engine.py      # Pydantic Policy Enforcement Engine
-    output_guard.py       # Canary scanner output filter
-  tests/
-    test_gateway.py       # Gateway integration tests
-    test_output_guard.py  # Output guard unit tests
-    test_policy.py        # Policy unit tests
-    test_proxy.py         # Gateway-to-Backend proxy tests
-    test_transports.py    # SSE & WebSocket connection transport tests
-  legacy/
-    mcp_governor.py       # Legacy Phase 0 controller
-    policy.json           # Legacy Phase 0 policy
-    test.py               # Legacy Phase 0 test script
-```
-
----
-
-## 3. OWASP ASI Red-Team Benchmark Results
-
-The gateway was evaluated against an independent red-team harness executing **17 attack scenarios** mapped to OWASP's Top 10 for Agentic Applications (published Dec 2025). The benchmark compares standalone server performance (Baseline) against gateway-protected execution.
-
-**Scoring Table:**
-
-| OWASP Category | Attack ID | Description | Standalone (Baseline) | Gateway (Protected) | Outcome |
-|---|---|---|---|---|---|
-| **ASI02: Tool Misuse** | 1 | Absolute Path Traversal via `read_file` | Exploited | Blocked | PASS |
-| **ASI02: Tool Misuse** | 2 | Relative Path Traversal via `read_file` | Exploited | Blocked | PASS |
-| **ASI02: Tool Misuse** | 3 | Unauthorized File Modification via `write_file` | Exploited | Blocked | PASS |
-| **ASI02: Tool Misuse** | 4 | SQL Injection on `query_database` | Exploited | Blocked | PASS |
-| **ASI03: Privilege Abuse** | 5 | Bob attempts to run `execute_command` | Exploited | Blocked | PASS |
-| **ASI03: Privilege Abuse** | 6 | Unregistered identity charlie calls `read_file` | Exploited | Blocked | PASS |
-| **ASI04: Supply Chain & SSRF** | 7 | SSRF / Cloud Metadata Leak via `fetch_url` | Blocked | Blocked | PASS |
-| **ASI04: Supply Chain & SSRF** | 8 | External Data Exfiltration via `fetch_url` | Exploited | Blocked | PASS |
-| **ASI05: Unexpected Code Exec** | 9 | Command Shell Injection via `execute_command` | Exploited | Blocked | PASS |
-| **ASI05: Unexpected Code Exec** | 10 | Command Chaining via `execute_command` | Exploited | Blocked | PASS |
-| **ASI05: Unexpected Code Exec** | 11 | Execution of Dropped Script via `execute_command` | Exploited | Blocked | PASS |
-| **ASI06: Context Poisoning** | 12 | Indirect Prompt Injection - file contains canary | Exploited | Blocked | PASS |
-| **ASI06: Context Poisoning** | 13 | Indirect Prompt Injection - SSRF contains canary | Exploited | Blocked | PASS |
-| **ASI06: Context Poisoning** | 14 | Indirect Prompt Injection - Database contains canary | Exploited | Blocked | PASS |
-| **ASI10: Rogue Agents** | 15 | Circuit Breaker Suspension after 3 flags | Exploited | Blocked | PASS |
-| **ASI10: Rogue Agents** | 16 | Unauthorized Flood lockouts | Exploited | Blocked | PASS |
-| **ASI10: Rogue Agents** | 17 | Session identity pollution check | Exploited | Blocked | PASS |
-
-**Summary Score: 17/17 attacks caught (100%)**
-
----
-
-## 3.1 Scanner CLI
-
-The `scan` subcommand runs the 17-attack benchmark against either the built-in toy server or a third-party MCP target. The output mode is selectable; the JSON contract is stable and versioned.
-
-### Flags
-
-| Flag | Effect |
-|---|---|
-| `--format rich` *(default)* | Interactive table, findings panel, score banner. |
-| `--format json` | Pure JSON document on stdout. Progress and warnings go to stderr. Suitable for CI / piping. |
-| `--output <path>` | Persist the JSON report to a file (independent of stdout format). |
-| `--server-url <url>` | Scan an HTTP/SSE MCP server (URL base, must expose `<URL>/sse`). |
-| `--server-cmd '<json argv>'` | Scan a local stdio MCP server (JSON array, never shell syntax). |
-| `--no-progress` | Suppress the animated progress bar (useful for non-interactive / CI). |
-| `--quiet` / `-q` | Compact output: score, coverage, vulnerabilities only. No header, no per-attack table. |
-| `--fail-on <critical\|high\|medium\|low>` | Cumulative severity gate. Exits `1` if any vulnerability at or above the threshold is found. Default: no gate (exit `0` even with findings). |
-
-### Compare saved scans
-
-Compare two saved schema-1.1 reports without contacting an MCP server:
+Install the released package and scan the built-in benchmark:
 
 ```bash
-agentic-firewall compare before.json after.json
-agentic-firewall compare before.json after.json --format json
+python -m pip install agentic-firewall
+agentic-firewall scan
 ```
 
-Reports are matched by stable `attack_id` values. The comparison includes score
-and coverage deltas, new/resolved/unchanged vulnerabilities, severity and status
-changes, protection-source changes, and error/skipped/not-applicable sets.
-Comparison JSON uses schema `1.0`, independently of the scan report schema.
-The command exits `1` for `REGRESSED` or `INCOMPLETE`, `0` for `IMPROVED` or
-`UNCHANGED`, and `2` for invalid or incompatible report inputs.
+The scan runs all 17 scenarios and reports a Security Score, Attack Coverage,
+statuses, findings, and remediation guidance. The default target is the local
+reference benchmark; no MCP server setup is required.
 
-### Exit Codes
-
-| Code | Meaning |
-|---|---|
-| `0` | Scan completed. No vulnerabilities, or vulnerabilities found but `--fail-on` threshold not met. |
-| `1` | Infrastructure error (one or more attacks returned `ERROR`), **or** `--fail-on` threshold was met. |
-| `2` | Usage / configuration error (bad target URL, missing argument). |
-
-`--fail-on` never alters the displayed score, findings, coverage, or JSON output — it only changes the process exit code.
-
-### Example: successful scan (17/17 PASS)
-
-```text
-Agentic Firewall  Security Scan
-  Target:   Local Toy Benchmark (MCP SSE via gateway)
-  Attacks:  17 scenarios across OWASP ASI02–ASI10
-
-  Running attacks ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 17/17
-
-     Attack                                      Severity  Status          Protection     Duration
-✓    Absolute Path Traversal via read_file       HIGH      PASS            FIREWALL         810 ms
-✓    Relative Path Traversal via read_file       HIGH      PASS            FIREWALL         808 ms
-✓    Unauthorized File Modification via          HIGH      PASS            FIREWALL         793 ms
-     write_fil…
-✓    SQL Injection on query_database             HIGH      PASS            FIREWALL         808 ms
-… (13 more rows) …
-
-  Security Score   100/100  (A)
-  Attack Coverage  17/17
-  Vulnerabilities  0
-```
-
-### Example: incomplete scan (target unreachable)
-
-```text
-Agentic Firewall  Security Scan
-  Target:   HTTP/SSE MCP server  http://127.0.0.1:1
-  Attacks:  17 scenarios across OWASP ASI02–ASI10
-
-  Running attacks ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0/17
-
-  Security Score   N/A
-  Scan Status      INCOMPLETE
-  Attack Coverage  0/17
-  Errors           17 (target unavailable)
-
-  Tip: Verify the target is reachable and retry. Use --format json for machine-readable diagnostics.
-```
-
-### Example: partial coverage (limited tool set)
-
-When the target MCP server does not expose all five reference tools, only the applicable attacks are evaluated; the remainder are reported as `NOT_APPLICABLE`.
-
-```text
-  Security Score   100/100  (A)
-  Attack Coverage  2/17
-  Vulnerabilities  0
-  Not Applicable   15  (target does not expose the required tools)
-```
-
-### Security findings
-
-For each `VULNERABLE` finding, the interactive output adds a compact findings panel with severity, OWASP category, protection source, evidence snippet, and a concrete remediation hint tied to `policy_v2.json`:
-
-```text
-────── SECURITY FINDINGS ───────────────────────────────────────────
-
-  CRITICAL  Command Shell Injection            Attack #9
-            OWASP:       ASI05: Unexpected Code Exec
-            Protection:  NONE
-            Evidence:    …exploit succeeded…
-            Remediation: Revoke execute_command from untrusted identities in policy_v2.json…
-
-  HIGH      SQL Injection on query_database    Attack #4
-            …
-```
-
-`--quiet` mode shows only the severity ladder and attack names — full remediation guidance is reserved for the JSON report (which includes the `remediation` field per result) and the interactive view.
-
-### JSON contract
-
-`--format json` emits a single document with `schema_version: "1.1"`. Top-level keys:
-
-```json
-{
-  "schema_version": "1.1",
-  "scanner": { "name": "agentic-firewall", "version": "0.1.0" },
-  "benchmark": "owasp-asi-17",
-  "target": { "kind": "...", "transport": "..." },
-  "summary": { "score": 100, "grade": "A", "score_status": "COMPLETE",
-               "attack_coverage": "17/17", "passed": 17, "vulnerable": 0,
-               "errored": 0, "skipped": 0, "not_applicable": 0,
-               "findings_by_severity": {...}, "findings_by_category": {...} },
-  "results": [
-    { "attack_id": 1, "attack_name": "...", "category": "...", "severity": "high",
-      "status": "PASS", "protection_source": "FIREWALL",
-      "explanation": "...", "remediation": null,
-      "evidence": { ... }, "duration_ms": 815.98 }
-  ]
-}
-```
-
-For `VULNERABLE` results the `remediation` field is a non-null string recommending the specific `policy_v2.json` change. For `PASS`, `ERROR`, `NOT_APPLICABLE`, `SKIPPED` results `remediation` is `null`.
-
-### Terminal safety
-
-All target-controlled text (attack names, evidence values, error messages) passes through a sanitizer before being rendered: ANSI / OSC control sequences are stripped, Rich markup is escaped, and output is bounded to 4 lines / 240 characters per field. JSON output is **never** sanitized — raw evidence is preserved in full for machine consumers.
-
----
-
-## 4. Documented Limitations
-
-Agentic Firewall focuses on system-level tool execution boundaries and data egress protection. It does not defend against the following OWASP categories:
-* **ASI01: Goal Hijacking**: Reasoning-layer manipulation (such as complex chain-of-thought hijacking) must be mitigated by LLM system prompt engineering, context pruning, or model-side evals, not a proxy gateway.
-* **ASI07: Inter-Agent Communication**: The gateway is scoped strictly to single-agent-to-server topologies. It does not validate or block collaborative agent-to-agent message payloads.
-* **ASI08: Cascading Failures**: Defending against chained agent operation failures requires transactional rollbacks across state boundaries, which lies outside the firewall scope.
-* **ASI09: Human-Agent Trust Exploitation**: Deceptive agent behavior targeting human users falls under client UI design constraints.
-
----
-
-## 5. Getting Started
-
-### Stage 0: install and run in three steps
+For repository development, use:
 
 ```bash
-git clone https://github.com/DSCmatter/Agentic_Firewall.git && cd Agentic_Firewall
 uv sync
 uv run agentic-firewall scan
 ```
 
-`agentic-firewall` selects free local ports, starts the toy server and gateway,
-runs the built-in OWASP benchmark, and stops both processes even if the run
-fails or is interrupted. No virtual-environment activation or environment
-variables are required.
+## Scanner
 
-For a standard pip workflow, use `python -m pip install .` and then run
-`agentic-firewall`.
+Run `agentic-firewall scan` against the built-in benchmark or a real MCP
+target. Available options are:
+
+| Option | Purpose |
+| --- | --- |
+| `--server-url URL` | Scan an HTTP/SSE MCP server. The URL must expose `<URL>/sse`. |
+| `--server-cmd JSON` | Scan a local stdio MCP server using a JSON argv array. |
+| `--format rich\|json` | Render terminal output or a machine-readable report. |
+| `--output PATH` | Write the JSON report to a file. |
+| `--quiet`, `-q` | Show only score, coverage, and findings. |
+| `--no-progress` | Disable the animated progress display. |
+| `--fail-on critical\|high\|medium\|low` | Exit 1 when a vulnerability at or above the threshold is found. |
 
 ### Scan an MCP server
 
-The scanner supports the two backend transports already implemented by the
-gateway. It starts and stops a temporary local policy gateway automatically,
-performs MCP `initialize` and `tools/list` preflight, then runs the existing
-17 attacks through that gateway.
+```bash
+# HTTP/SSE target
+agentic-firewall scan --server-url http://127.0.0.1:8000
+
+# Local stdio target
+agentic-firewall scan --server-cmd '["python", "my_mcp_server.py"]'
+```
+
+HTTP/SSE and stdio are the supported scanner target transports. WebSocket
+support in the gateway does not make WebSocket a supported scanner target.
+Embedded credentials and query strings in `--server-url` are rejected.
+Applicability is based on declared tool names; semantic compatibility with a
+tool's input schema is not fully validated.
+
+### Successful scan
+
+```text
+Security Score   100/100 (A)
+Attack Coverage  17/17
+Vulnerabilities  0
+```
+
+### Vulnerability findings
+
+For a vulnerable target, each finding includes the severity, attack name,
+OWASP category, protection source, evidence, and remediation. `VULNERABLE`
+means the attack demonstrated a vulnerability against the protected target;
+it is not merely an informational result.
+
+```text
+CRITICAL  Command Shell Injection via execute_command  Attack #9
+          OWASP:       ASI05: Unexpected Code Exec
+          Protection:  NONE
+          Evidence:    exploit succeeded
+          Remediation: revoke execute_command for untrusted identities
+```
+
+### Result statuses
+
+- `PASS`: the attack was resisted according to the benchmark criteria.
+- `VULNERABLE`: the attack succeeded against the protected target.
+- `ERROR`: a transport, timeout, or execution failure prevented a result. It
+  is not a vulnerability.
+- `SKIPPED`: the test was intentionally omitted.
+- `NOT_APPLICABLE`: the target does not expose the required tool. It is not a
+  successful security test.
+
+### Security Score and Attack Coverage
+
+The score is a deterministic, severity-weighted score over applicable,
+evaluated tests (`PASS` and `VULNERABLE`). The weights are Critical = 10,
+High = 6, Medium = 3, and Low = 1. The score is the weighted points earned by
+passing tests divided by the maximum weighted points for the applicable
+evaluated tests, rounded to a percentage. It is a measure of this benchmark's
+results, not a percentage of universal security.
+
+Attack Coverage is shown separately as `applicable tests / 17`. If any test is
+`ERROR`, the scan is incomplete and the score is `N/A`; incomplete scans never
+receive a numeric score. A complete scan with no applicable tests also has no
+numeric score.
+
+Protection attribution is reported as `FIREWALL`, `TARGET`, `BOTH`, `NONE`,
+or `UNKNOWN` based on the observed response evidence.
+
+## Compare scans
+
+Save two schema 1.1 reports and compare them without contacting an MCP server:
 
 ```bash
-# HTTP/SSE MCP server; URL is the server base, which must expose <URL>/sse.
-uv run agentic-firewall scan --server-url http://127.0.0.1:8000
-
-# Local stdio MCP server. The command is JSON argv, never shell syntax.
-uv run agentic-firewall scan --server-cmd '["python", "my_mcp_server.py"]'
+agentic-firewall scan --format json --output before.json
+agentic-firewall scan --format json --output after.json
+agentic-firewall compare before.json after.json
 ```
 
-`--server-url` rejects embedded credentials and query strings so secrets are
-not placed in output or reports. Authentication headers and WebSocket targets
-are not supported by the current gateway transport. The default command, with
-no target option, remains the built-in toy benchmark.
+Comparison uses stable `attack_id` values and reports regressions, resolved or
+new vulnerabilities, severity changes, status changes, protection-source
+changes, and coverage changes. Comparison JSON is available with
+`--format json`.
 
-### Benchmark Semantics & Scoring Methodology
+## CI
 
-#### Result Statuses
-* **PASS**: The protected system successfully resisted the attack according to benchmark criteria.
-* **VULNERABLE**: The attack successfully demonstrated a vulnerability against the protected system.
-* **ERROR**: Transport, timeout, or execution error prevented establishing a security result.
-* **SKIPPED**: The test was intentionally omitted.
-* **NOT_APPLICABLE**: The target server does not expose the tool required for the attack.
+Use JSON output and a severity gate in CI:
 
-#### Protection Attribution (`protection_source`)
-Attribution is established from explicit response evidence rather than inference:
-* **FIREWALL**: The attack was directly intercepted and blocked by the firewall gateway (policy engine, sandbox constraints, or output guard).
-* **TARGET**: The underlying MCP server rejected the attack independently without firewall intervention.
-* **BOTH**: Layered defense where the target was already non-vulnerable and the firewall also enforced policy.
-* **NONE**: Vulnerability demonstrated (exploit succeeded).
-* **UNKNOWN**: Inconclusive evidence to attribute protection.
-
-#### Security Score & Attack Coverage
-The Agentic Firewall Security Score is a deterministic, risk-weighted score across the 17 benchmark scenarios:
-* **Weights**: Critical (10 pts), High (6 pts), Medium (3 pts), Low (1 pt).
-* **Evaluated Divisor**: Score is computed strictly over applicable, evaluated tests (`PASS` + `VULNERABLE`).
-* **Attack Coverage**: Expressed as `applicable_tests / 17` (e.g. `17/17` for full tool coverage, or `2/17` for single-purpose servers).
-* **Incomplete Scans**: If any test encounters an infrastructure or transport failure (`ERROR > 0`), the score displays as `N/A` with `Scan Status: INCOMPLETE`. Incomplete scans are never awarded a passing grade or numeric score.
-
-#### Third-Party Target Limitations
-* **Tool Set Alignment**: The 17 benchmark attacks target five reference tools (`read_file`, `write_file`, `execute_command`, `fetch_url`, `query_database`). For third-party MCP servers that do not expose these tools, non-applicable attacks are marked `NOT_APPLICABLE` and excluded from the score divisor.
-* **Schema Verification**: Applicability checks declared tool presence; semantic compatibility of tool input schemas is not yet validated in Stage 1.
-* **Scope**: The benchmark tests runtime firewall policy boundaries and data egress controls; it does not claim to guarantee universal agent security or defend against out-of-scope threat models.
-
-
-### Running Tests
-Execute the pytest suites:
 ```bash
-uv run --extra dev pytest
+agentic-firewall scan --no-progress --format json --fail-on high
 ```
 
-### Running the Red-Team Benchmark
-Run the OWASP attack harness comparing baseline and protected servers:
+Exit codes are:
+
+- `0`: the scan completed and the security gate was not triggered;
+- `1`: an infrastructure error occurred or the security gate was triggered;
+- `2`: a usage or configuration error occurred.
+
+`--fail-on` does not change the score, findings, coverage, or JSON report.
+
+## JSON output
+
+Scan reports use schema version `1.1` and include stable attack IDs, target
+details, score and coverage, result statuses, protection attribution, evidence,
+and remediation metadata.
+
+```json
+{
+  "schema_version": "1.1",
+  "summary": {
+    "score": 100,
+    "grade": "A",
+    "attack_coverage": "17/17",
+    "passed": 17,
+    "vulnerable": 0
+  },
+  "results": [
+    {
+      "attack_id": 1,
+      "status": "PASS",
+      "protection_source": "FIREWALL",
+      "evidence": {},
+      "remediation": null
+    }
+  ]
+}
+```
+
+## Runtime Firewall
+
+The scanner and runtime firewall are complementary. The runtime side exposes
+a policy engine for tool authorization, identity and session binding,
+sandbox/path constraints, an output guard, a circuit breaker, and audit logs.
+The gateway supports HTTP/SSE and WebSocket client connections and can proxy
+HTTP/SSE or local stdio backends. The scanner's supported target transports
+remain HTTP/SSE and stdio.
+
+## Attack Coverage
+
+The 17 current scenarios are grouped by OWASP ASI category:
+
+**ASI02: Tool Misuse**
+
+1. Absolute Path Traversal via `read_file`
+2. Relative Path Traversal via `read_file`
+3. Unauthorized File Modification via `write_file`
+4. SQL Injection on `query_database`
+
+**ASI03: Privilege Abuse**
+
+5. Bob attempts to run `execute_command`
+6. Unregistered identity charlie calls `read_file`
+
+**ASI04: Supply Chain & SSRF**
+
+7. SSRF / Cloud Metadata Leak via `fetch_url`
+8. External Data Exfiltration via `fetch_url`
+
+**ASI05: Unexpected Code Exec**
+
+9. Command Shell Injection via `execute_command`
+10. Command Chaining via `execute_command`
+11. Execution of Dropped Script via `execute_command`
+
+**ASI06: Context Poisoning**
+
+12. Indirect Prompt Injection - file contains canary
+13. Indirect Prompt Injection - SSRF contains canary
+14. Indirect Prompt Injection - Database contains canary
+
+**ASI10: Rogue Agents**
+
+15. Circuit Breaker Suspension after 3 security flags
+16. Unauthorized Flood test
+17. Session identity pollution check
+
+## Limitations and Threat Model
+
+Agentic Firewall focuses on MCP tool execution boundaries and output/data
+egress controls. It does not attempt to solve all LLM reasoning-layer attacks,
+all agentic attack classes, inter-agent communication security, every possible
+MCP server or tool schema, or universal AI security. In particular, the
+benchmark does not cover all OWASP agentic-application categories, and tool
+applicability for third-party servers is based on declared names rather than
+full semantic schema validation. Local stdio commands run with the invoking
+user's operating-system permissions.
+
+## Development
+
 ```bash
-uv run agentic-firewall
+uv sync
+uv run pytest
 ```
 
-### CI Integration
+The existing [launch assets](src/docs/LAUNCH_ASSETS.md) contain release and
+community-positioning material. The [user validation framework](src/docs/USER_VALIDATION_FRAMEWORK.md)
+documents the project's local-first feedback approach. Manual gateway
+verification is intended for development and is not required for normal scans.
 
-Agentic Firewall is designed for CI/CD pipelines without requiring a SaaS backend, GitHub App, or interactive configuration. Use the CLI flags to define security gates and deterministic output.
+## Release and Roadmap
 
-#### GitHub Actions Example
-
-Add this workflow to `.github/workflows/mcp-security.yml`:
-
-```yaml
-name: MCP Security Scan
-
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main]
-
-jobs:
-  security-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - uses: astral-sh/setup-uv@v6
-        with:
-          version: latest
-      
-      - name: Install dependencies
-        run: uv sync
-      
-      # Scan the built-in benchmark (no MCP server required)
-      - name: Agentic Firewall Security Scan
-        run: uv run agentic-firewall scan --no-progress --format json --output scan-report.json --fail-on high
-      
-      # Optional: scan a third-party MCP server
-      # - name: Scan Custom MCP Server
-      #   run: uv run agentic-firewall scan --server-url http://localhost:8000 --no-progress --format json --fail-on high
-      
-      # Optional: save scan report as artifact
-      - name: Upload scan report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: agentic-firewall-report
-          path: scan-report.json
-      
-      # Optional: compare against baseline scan
-      # - name: Compare against baseline
-      #   run: uv run agentic-firewall compare baseline.json scan-report.json --format json
-```
-
-#### CLI Flags for CI
-
-| Flag | Purpose |
-|---|---|
-| `--no-progress` | Suppresses animated progress bar. Required for non-interactive / CI environments. |
-| `--format json` | Emits pure JSON to stdout (progress/warnings to stderr). Suitable for logging and artifact storage. |
-| `--output <path>` | Persists JSON report to file for artifact storage and future comparisons. |
-| `--fail-on <severity>` | CI security gate: exits `1` if any VULNERABLE finding at or above the severity threshold is found. Cumulative: `--fail-on high` also fails on CRITICAL. |
-| `--quiet` | Alternative to `--format json` if text output is acceptable; shows only score, coverage, and findings. |
-
-#### Exit Codes in CI
-
-The scanner returns deterministic exit codes:
-
-- **0**: Scan completed successfully and no CI security gate was triggered.
-- **1**: Infrastructure error (attack encountered ERROR status) OR security gate threshold was met.
-- **2**: Usage / configuration error (bad target URL, missing argument).
-
-#### Example CI Configurations
-
-**Fail on HIGH or CRITICAL vulnerabilities:**
-```bash
-uv run agentic-firewall scan --no-progress --format json --fail-on high
-```
-
-**Fail on any vulnerability:**
-```bash
-uv run agentic-firewall scan --no-progress --format json --fail-on low
-```
-
-**Scan with no gate (exit 0 even if vulnerabilities are found):**
-```bash
-uv run agentic-firewall scan --no-progress --format json
-```
-
-**Scan a remote MCP server:**
-```bash
-uv run agentic-firewall scan --server-url http://mcp-server:8000 --no-progress --format json --fail-on high
-```
-
-**Scan a local stdio MCP server:**
-```bash
-uv run agentic-firewall scan --server-cmd '["python", "my_mcp_server.py"]' --no-progress --format json --fail-on high
-```
-
-#### CI Best Practices
-
-1. **Always use `--no-progress`** in CI pipelines to avoid unnecessary terminal escape sequences.
-2. **Use `--format json`** for machine-readable reports suitable for artifact storage and diffing.
-3. **Set `--fail-on` to match your security policy** (e.g., `--fail-on high` for strict security posture).
-4. **Save the JSON report as an artifact** for trend analysis and historical comparison.
-5. **Compare reports over time** using `agentic-firewall compare baseline.json current.json --format json` to detect regressions.
-
----
-
-## 6. Manual Testing & Verification
-
-You can manually inspect proxy routing, path-traversal blocking, and session pollution prevention using standard shell clients or the official MCP Inspector.
-
-### Scenario Startup
-Start the target vulnerabilities testbed and policy gateway:
-1. **Start Toy Server (Terminal 1)**:
-   * *PowerShell*: `$env:PYTHONPATH=".;src"; uv run uvicorn src.toy_server.toy_server:app --port 8000`
-   * *Git Bash*: `PYTHONPATH=".;src" uv run uvicorn src.toy_server.toy_server:app --port 8000`
-2. **Start Gateway Server (Terminal 2)**:
-   * *PowerShell*: `$env:PYTHONPATH=".;src"; $env:FW_REAL_SERVER_URL="http://127.0.0.1:8000"; uv run uvicorn src.gateway.mcp_gateway:app --port 8001`
-   * *Git Bash*: `PYTHONPATH=".;src" FW_REAL_SERVER_URL="http://127.0.0.1:8000" uv run uvicorn src.gateway.mcp_gateway:app --port 8001`
-
----
-
-### Option A: Testing via Git Bash Command Line
-Open a client session stream in one window, and send requests in another:
-
-1. **Open SSE client connection (Terminal 3)**:
-   ```bash
-   curl "http://127.0.0.1:8001/sse?identity=alice&session_id=session_abc"
-   ```
-2. **Execute Tool Calls (Terminal 4)**:
-   * **Scenario 1: Authorized File Read (Allow)**:
-     ```bash
-     curl -X POST "http://127.0.0.1:8001/message?session_id=session_abc&identity=alice" -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "read_file", "arguments": {"path": "src/gateway/policy_v2.json"}}}'
-     ```
-   * **Scenario 2: Path Traversal (Block)**:
-     ```bash
-     curl -X POST "http://127.0.0.1:8001/message?session_id=session_abc&identity=alice" -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": "read_file", "arguments": {"path": "C:\\Windows\\win.ini"}}}'
-     ```
-   * **Scenario 3: Session Identity Pollution (Block)**:
-     ```bash
-     curl -X POST "http://127.0.0.1:8001/message?session_id=session_abc&identity=bob" -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 3, "method": "tools/call", "params": {"name": "read_file", "arguments": {"path": "src/gateway/policy_v2.json"}}}'
-     ```
-3. **Verify logs on disk**:
-   * Open the active audit logs at [src/gateway/gateway_audit.log](./src/gateway/gateway_audit.log) to see the JSON-structured decision logs.
-
----
-
-### Option B: Interactive Verification via MCP Inspector
-The official **MCP Inspector** acts as a web client UI over SSE to view and trigger tool executions:
-
-1. **Launch the Inspector**:
-   ```bash
-   npx -y @modelcontextprotocol/inspector http://127.0.0.1:8001/sse?identity=alice
-   ```
-2. **Connect to SSE**:
-   * In the top-left sidebar of the web page, change **Transport Type** from `STDIO` to `SSE`.
-   * Ensure the target URL is set to `http://127.0.0.1:8001/sse?identity=alice`.
-   * Click **Connect**.
-3. **Trigger Tool Call Evals**:
-   * Under the **Tools** tab, you will only see tools allowed for `alice` (least-privilege tool list filtering).
-   * Call `read_file` with path `src/gateway/policy_v2.json` to verify successful execution.
-   * Call `read_file` with path `/etc/passwd` to observe the immediate `ARG_CONSTRAINT_VIOLATION` security block.
-
-### Option C: Local Stdio Subprocess Proxying
-This mode spawns the backend MCP server as a local subprocess, communicating directly via `stdin`/`stdout` pipes.
-
-> [!NOTE]
-> Since the gateway communicates with the subprocess via stdio pipes, the command target must be a valid stdio-based MCP JSON-RPC server (not an HTTP/SSE app like `toy_server.py`).
-
-1. **Create Stdio Test Server (`stdio_server.py`)** in your project root:
-   ```python
-   # stdio_server.py
-   import sys
-   import json
-
-   for line in sys.stdin:
-       line = line.strip()
-       if not line:
-           continue
-       try:
-           msg = json.loads(line)
-       except Exception:
-           continue
-       msg_id = msg.get("id")
-       method = msg.get("method")
-       
-       if method == "tools/list":
-           resp = {
-               "jsonrpc": "2.0",
-               "id": msg_id,
-               "result": {
-                   "tools": [
-                       {"name": "read_file", "description": "Read file content"},
-                       {"name": "execute_command", "description": "Run shell command"}
-                   ]
-               }
-           }
-       elif method == "tools/call":
-           tool_name = msg["params"]["name"]
-           args = msg["params"].get("arguments", {})
-           path = args.get("path", "")
-           resp = {
-               "jsonrpc": "2.0",
-               "id": msg_id,
-               "result": {
-                   "content": [{"type": "text", "text": f"Successfully executed {tool_name} with path: {path}"}]
-               }
-           }
-       else:
-           resp = {"jsonrpc": "2.0", "id": msg_id, "result": {}}
-           
-       sys.stdout.write(json.dumps(resp) + "\n")
-       sys.stdout.flush()
-   ```
-
-2. **Start Gateway Server (spawning the stdio subprocess)**:
-   * *PowerShell*:
-     ```powershell
-     $env:PYTHONPATH=".;src"
-     $env:FW_REAL_SERVER_CMD='["python", "stdio_server.py"]'
-     uv run uvicorn src.gateway.mcp_gateway:app --port 8001
-     ```
-   * *Git Bash*:
-     ```bash
-     PYTHONPATH=".;src" FW_REAL_SERVER_CMD='["python", "stdio_server.py"]' uv run uvicorn src.gateway.mcp_gateway:app --port 8001
-     ```
-
----
-
-### Option D: Bidirectional WebSocket Client Connection
-You can test the entire pipeline (Gateway policy filters + Stdio subprocess execution) over full-duplex WebSockets:
-
-1. **Connect via WebSocket client (e.g. `wscat`)**:
-   ```bash
-   npx wscat -c "ws://127.0.0.1:8001/ws?identity=alice&session_id=session_ws"
-   ```
-   *Expected connection response:*
-   ```text
-   Connected (press CTRL+C to quit)
-   < event: endpoint
-   data: /message?session_id=session_ws&identity=alice
-   ```
-
-2. **Test 1: Request tool list (Filters out `execute_command` for identity `alice`)**:
-   Send:
-   ```json
-   {"jsonrpc": "2.0", "id": 1, "method": "tools/list"}
-   ```
-   *Response from Gateway (showing filtered tools list):*
-   ```json
-   < event: message
-   data: {"jsonrpc": "2.0", "id": 1, "result": {"tools": [{"name": "read_file", "description": "Read file content"}]}}
-   ```
-
-3. **Test 2: Call Allowed Tool**:
-   Send:
-   ```json
-   {"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": "read_file", "arguments": {"path": "src/gateway/policy_v2.json"}}}
-   ```
-   *Response from Gateway (execution proxies through subprocess successfully):*
-   ```json
-   < event: message
-   data: {"jsonrpc": "2.0", "id": 2, "result": {"content": [{"type": "text", "text": "Successfully executed read_file with path: src/gateway/policy_v2.json"}]}}
-   ```
-
-4. **Test 3: Sandbox Traversal Attempt (Blocked by Policy Engine)**:
-   Send:
-   ```json
-   {"jsonrpc": "2.0", "id": 3, "method": "tools/call", "params": {"name": "read_file", "arguments": {"path": "C:\\Windows\\win.ini"}}}
-   ```
-   *Response from Gateway (intercepted and blocked before reaching subprocess):*
-   ```json
-   < event: message
-    data: {"jsonrpc": "2.0", "id": 3, "error": {"code": -32602, "message": "Security Policy Violation: Path 'C:\\Windows\\win.ini' is outside the configured sandbox"}}
-   ```
-
-
+The current release is **v0.1.1**, available on PyPI under the MIT license.
+Future direction will be guided by real-world developer feedback, MCP
+compatibility reports, and security findings. The project does not promise a
+SaaS dashboard, billing system, or universal security platform.

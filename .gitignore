@@ -10,3 +10,4 @@ src/threat_log*.txt
 skill-selector.md
 *.txt
 /src/docs
+dist/
