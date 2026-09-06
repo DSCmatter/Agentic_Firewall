@@ -7,7 +7,36 @@ import httpx
 
 from security.policy_engine import PydanticPolicyEngine, GatewayPolicy
 from security.output_guard import scan_output_text, extract_text_from_result
-from gateway.state import POLICY_PATH, AUDIT_LOG_PATH, LOG_PATH, session_manager, circuit_breaker, log_audit_event
+from gateway.state import (
+    POLICY_PATH,
+    AUDIT_LOG_PATH,
+    LOG_PATH,
+    MAX_MCP_MESSAGE_BYTES,
+    session_manager,
+    circuit_breaker,
+    log_audit_event,
+)
+
+
+async def iter_bounded_lines(response: httpx.Response):
+    """Yield SSE lines while bounding an attacker-controlled event buffer."""
+    buffer = bytearray()
+    async for chunk in response.aiter_bytes():
+        while chunk:
+            newline = chunk.find(b"\n")
+            if newline < 0:
+                buffer.extend(chunk)
+                if len(buffer) > MAX_MCP_MESSAGE_BYTES:
+                    raise ValueError("MCP SSE line exceeds size limit")
+                break
+            buffer.extend(chunk[:newline])
+            if len(buffer) > MAX_MCP_MESSAGE_BYTES:
+                raise ValueError("MCP SSE line exceeds size limit")
+            yield bytes(buffer).rstrip(b"\r").decode(errors="replace")
+            buffer.clear()
+            chunk = chunk[newline + 1:]
+    if buffer:
+        yield bytes(buffer).decode(errors="replace")
 
 # Configuration
 def get_real_server_url() -> str:
@@ -44,9 +73,14 @@ async def log_proc_stderr(proc: asyncio.subprocess.Process):
             line = await proc.stderr.readline()
             if not line:
                 break
-            err_str = line.decode().strip()
+            if len(line) > MAX_MCP_MESSAGE_BYTES:
+                print("[Backend Stderr]: <line exceeds size limit>")
+                continue
+            # repr prevents backend-controlled control characters from reaching
+            # the terminal while retaining useful diagnostic text.
+            err_str = line.decode(errors="replace").strip()
             if err_str:
-                print(f"[Backend Stderr]: {err_str}")
+                print(f"[Backend Stderr]: {err_str!r}")
     except Exception:
         pass
 
@@ -56,7 +90,9 @@ async def listen_to_stdio_backend(session_id: str, identity: str, proc: asyncio.
             line = await proc.stdout.readline()
             if not line:
                 break
-            line_str = line.decode().strip()
+            if len(line) > MAX_MCP_MESSAGE_BYTES:
+                continue
+            line_str = line.decode(errors="replace").strip()
             if not line_str:
                 continue
 
@@ -66,6 +102,9 @@ async def listen_to_stdio_backend(session_id: str, identity: str, proc: asyncio.
                 q = session_manager.get_queue(session_id)
                 if q:
                     await q.put(line_str)
+                continue
+
+            if not isinstance(msg, dict):
                 continue
 
             msg_id = msg.get("id")
@@ -143,7 +182,7 @@ async def listen_to_stdio_backend(session_id: str, identity: str, proc: asyncio.
 async def listen_to_backend_stream(session_id: str, identity: str, response: httpx.Response):
     try:
         current_event = None
-        async for line in response.aiter_lines():
+        async for line in iter_bounded_lines(response):
             line = line.strip()
             if not line:
                 continue
@@ -164,10 +203,14 @@ async def listen_to_backend_stream(session_id: str, identity: str, response: htt
                             await q.put(data_val)
                         continue
 
+                    if not isinstance(msg, dict):
+                        continue
+
                     msg_id = msg.get("id")
 
                     # Intercept tools/list response to filter allowed tools
-                    if msg.get("result", {}).get("tools"):
+                    result = msg.get("result")
+                    if isinstance(result, dict) and result.get("tools"):
                         policy_engine.policy = load_policy()
                         tool_policy = policy_engine.policy.identities.get(identity)
                         if identity != "__probe__" and tool_policy is not None:

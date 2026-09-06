@@ -9,6 +9,7 @@ import uvicorn
 from httpx import AsyncClient
 
 from src.gateway.mcp_gateway import app, AUDIT_LOG_PATH, circuit_breaker
+from src.gateway.state import MAX_MCP_MESSAGE_BYTES
 
 def get_free_port():
     s = socket.socket()
@@ -98,6 +99,29 @@ async def test_identity_lookup_and_allowed_tool(gateway_server):
             lines = f.readlines()
             log_entries = [json.loads(line) for line in lines]
             assert any(entry["tool"] == "read_file" and entry["decision"] == "allow" for entry in log_entries)
+
+
+@pytest.mark.asyncio
+async def test_oversized_and_non_object_mcp_requests_are_rejected(gateway_server):
+    async with AsyncClient(base_url=gateway_server) as client:
+        oversized = await client.post(
+            "/message?session_id=missing&identity=alice",
+            content=b"{" + b"a" * MAX_MCP_MESSAGE_BYTES + b"}",
+            headers={"content-type": "application/json"},
+        )
+        assert oversized.status_code == 413
+
+        malformed = await client.post(
+            "/message?session_id=missing&identity=alice",
+            json=["not", "an", "object"],
+        )
+        assert malformed.status_code == 400
+
+        bad_params = await client.post(
+            "/message?session_id=missing&identity=alice",
+            json={"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": []},
+        )
+        assert bad_params.status_code == 400
 
 @pytest.mark.asyncio
 async def test_unscoped_identity_and_unallowed_tool(gateway_server):

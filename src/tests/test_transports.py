@@ -11,6 +11,8 @@ import websockets
 from httpx import AsyncClient
 
 from src.gateway.mcp_gateway import app as gateway_app, AUDIT_LOG_PATH, circuit_breaker
+from gateway.state import MAX_MCP_MESSAGE_BYTES
+from gateway.transports import iter_bounded_lines, log_proc_stderr
 
 def get_free_port():
     s = socket.socket()
@@ -18,6 +20,35 @@ def get_free_port():
     port = s.getsockname()[1]
     s.close()
     return port
+
+
+@pytest.mark.asyncio
+async def test_sse_line_limit_rejects_oversized_event():
+    class FakeResponse:
+        async def aiter_bytes(self):
+            yield b"x" * (MAX_MCP_MESSAGE_BYTES + 1)
+
+    with pytest.raises(ValueError, match="exceeds size limit"):
+        async for _ in iter_bounded_lines(FakeResponse()):
+            pass
+
+
+@pytest.mark.asyncio
+async def test_backend_stderr_cannot_inject_terminal_controls(capsys):
+    class FakeStream:
+        def __init__(self):
+            self.lines = [b"\x1b]2;evil\x07diagnostic\n", b""]
+
+        async def readline(self):
+            return self.lines.pop(0)
+
+    class FakeProcess:
+        stderr = FakeStream()
+
+    await log_proc_stderr(FakeProcess())
+    output = capsys.readouterr().out
+    assert "\x1b" not in output
+    assert "\\x1b]2;evil" in output
 
 @pytest.fixture(autouse=True)
 def reset_circuit_breaker():

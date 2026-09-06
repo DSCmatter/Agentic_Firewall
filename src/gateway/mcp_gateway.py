@@ -18,7 +18,8 @@ from gateway.state import (
     log_audit_event,
     AUDIT_LOG_PATH,
     LOG_PATH,
-    POLICY_PATH
+    POLICY_PATH,
+    MAX_MCP_MESSAGE_BYTES,
 )
 from gateway.transports import (
     get_real_server_url,
@@ -44,6 +45,16 @@ async def lifespan(app: FastAPI):
 # FastAPI App
 app = FastAPI(title="MCP Policy Gateway", version="2.0.0", lifespan=lifespan)
 
+
+async def _read_bounded_body(request: Request) -> bytes:
+    """Read one MCP request without allowing an unbounded body allocation."""
+    body = bytearray()
+    async for chunk in request.stream():
+        if len(body) + len(chunk) > MAX_MCP_MESSAGE_BYTES:
+            raise HTTPException(status_code=413, detail="MCP message exceeds size limit")
+        body.extend(chunk)
+    return bytes(body)
+
 @app.get("/sse")
 async def sse_endpoint(
     request: Request,
@@ -68,7 +79,8 @@ async def sse_endpoint(
                     *cmd,
                     stdin=asyncio.subprocess.PIPE,
                     stdout=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.PIPE
+                    stderr=asyncio.subprocess.PIPE,
+                    limit=MAX_MCP_MESSAGE_BYTES,
                 )
                 session_manager.processes[session_id] = proc
                 backend_task = asyncio.create_task(
@@ -132,14 +144,21 @@ async def post_message(
     identity: str = Query("anonymous")
 ):
     try:
-        body = await request.body()
+        body = await _read_bounded_body(request)
         message = json.loads(body)
+    except HTTPException:
+        raise
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid JSON body")
+
+    if not isinstance(message, dict):
+        raise HTTPException(status_code=400, detail="MCP message must be a JSON object")
 
     msg_id = message.get("id")
     method = message.get("method")
     params = message.get("params", {})
+    if not isinstance(params, dict):
+        raise HTTPException(status_code=400, detail="MCP params must be a JSON object")
 
     # Verify session exists
     q = session_manager.get_queue(session_id)
@@ -375,7 +394,8 @@ async def websocket_endpoint(
                 *cmd,
                 stdin=asyncio.subprocess.PIPE,
                 stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE
+                stderr=asyncio.subprocess.PIPE,
+                limit=MAX_MCP_MESSAGE_BYTES,
             )
             session_manager.processes[session_id] = proc
             backend_task = asyncio.create_task(
@@ -433,9 +453,25 @@ async def websocket_endpoint(
             except Exception:
                 continue
 
+            if not isinstance(message, dict):
+                await queue.put(json.dumps({
+                    "jsonrpc": "2.0",
+                    "id": None,
+                    "error": {"code": -32600, "message": "MCP message must be a JSON object"},
+                }))
+                continue
+
+            params = message.get("params", {})
+            if not isinstance(params, dict):
+                await queue.put(json.dumps({
+                    "jsonrpc": "2.0",
+                    "id": message.get("id"),
+                    "error": {"code": -32602, "message": "MCP params must be a JSON object"},
+                }))
+                continue
+
             msg_id = message.get("id")
             method = message.get("method")
-            params = message.get("params", {})
 
             # 1. Identity Verification
             registered_identity = session_manager.get_identity(session_id)

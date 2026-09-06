@@ -9,6 +9,8 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 POLICY_PATH = os.path.join(SCRIPT_DIR, "policy_v2.json")
 AUDIT_LOG_PATH = os.path.join(SCRIPT_DIR, "gateway_audit.log")
 LOG_PATH = os.path.join(SCRIPT_DIR, "threat_log.txt")
+MAX_MCP_MESSAGE_BYTES = 1024 * 1024
+MAX_SESSION_QUEUE_MESSAGES = 100
 
 # Circuit Breaker
 class CircuitBreaker:
@@ -40,7 +42,7 @@ class SessionManager:
         self.processes: Dict[str, asyncio.subprocess.Process] = {}
 
     def create_session(self, session_id: str, identity: str) -> asyncio.Queue:
-        q = asyncio.Queue()
+        q = asyncio.Queue(maxsize=MAX_SESSION_QUEUE_MESSAGES)
         self.queues[session_id] = q
         self.identities[session_id] = identity
         return q
