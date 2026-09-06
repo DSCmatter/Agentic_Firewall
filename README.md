@@ -268,7 +268,8 @@ verification is intended for development and is not required for normal scans.
 
 ## Release and Roadmap
 
-The current release is **v0.1.1**, available on PyPI under the MIT license.
+The current release is [**v0.1.1 on PyPI**](https://pypi.org/project/agentic-firewall/0.1.1/),
+available under the MIT license.
 Future direction will be guided by real-world developer feedback, MCP
 compatibility reports, and security findings. The project does not promise a
 SaaS dashboard, billing system, or universal security platform.
