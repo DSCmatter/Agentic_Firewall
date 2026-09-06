@@ -1,4 +1,4 @@
-# Agentic Firewall v2
+# Agentic Firewall
 
 **MCP Policy Gateway & Independent OWASP Red-Team Security Benchmark**
 
@@ -12,7 +12,7 @@ Recent security research revealed a critical vulnerability in AI coding environm
 
 ## The Solution
 
-Agentic Firewall v2 is a runtime security middleware and red-team benchmark harness designed to secure Model Context Protocol (MCP) applications. It acts as an intercepting proxy between an MCP client (AI agent) and any MCP server — enforcing least-privilege tool policies, pinned session identity, output guard canary scanning, and a counter-based circuit breaker.
+Agentic Firewall is a runtime security middleware and red-team benchmark harness designed to secure Model Context Protocol (MCP) applications. It acts as an intercepting proxy between an MCP client (AI agent) and any MCP server — enforcing least-privilege tool policies, pinned session identity, output guard canary scanning, and a counter-based circuit breaker.
 
 ## Why This Matters
 
@@ -279,7 +279,7 @@ All target-controlled text (attack names, evidence values, error messages) passe
 
 ## 4. Documented Limitations
 
-The Agentic Firewall v2 focuses on system-level tool execution boundaries and data egress protection. It does not defend against the following OWASP categories:
+Agentic Firewall focuses on system-level tool execution boundaries and data egress protection. It does not defend against the following OWASP categories:
 * **ASI01: Goal Hijacking**: Reasoning-layer manipulation (such as complex chain-of-thought hijacking) must be mitigated by LLM system prompt engineering, context pruning, or model-side evals, not a proxy gateway.
 * **ASI07: Inter-Agent Communication**: The gateway is scoped strictly to single-agent-to-server topologies. It does not validate or block collaborative agent-to-agent message payloads.
 * **ASI08: Cascading Failures**: Defending against chained agent operation failures requires transactional rollbacks across state boundaries, which lies outside the firewall scope.
