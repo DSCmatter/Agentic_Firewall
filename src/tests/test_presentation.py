@@ -111,6 +111,18 @@ def test_sanitize_truncates_multiline():
     assert len(lines) <= 5  # 4 content lines + ellipsis line
 
 
+def test_finish_uses_ascii_icons_for_legacy_terminal_encoding():
+    class LegacyEncodingStream(io.StringIO):
+        encoding = "cp1252"
+
+    stream = LegacyEncodingStream()
+    console = Console(file=stream, force_terminal=False, color_system=None, width=120)
+    presenter = ScanPresenter(console=console)
+    presenter.finish(make_report([make_result(1)]))
+    assert "+" in stream.getvalue()
+    assert "✓" not in stream.getvalue()
+
+
 # ---------------------------------------------------------------------------
 # 7–8: quiet_finish
 # ---------------------------------------------------------------------------

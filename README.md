@@ -276,7 +276,7 @@ The Agentic Firewall v2 focuses on system-level tool execution boundaries and da
 ### Stage 0: install and run in three steps
 
 ```bash
-git clone <your-repository-url> && cd Agentic_Firewall
+git clone https://github.com/DSCmatter/Agentic_Firewall.git && cd Agentic_Firewall
 uv sync
 uv run agentic-firewall scan
 ```
@@ -519,7 +519,7 @@ You can test the entire pipeline (Gateway policy filters + Stdio subprocess exec
    *Response from Gateway (intercepted and blocked before reaching subprocess):*
    ```json
    < event: message
-   data: {"jsonrpc": "2.0", "id": 3, "error": {"code": -32602, "message": "Security Policy Violation: Path 'C:\\Windows\\win.ini' is outside sandbox 'D:/Coding'"}}
+    data: {"jsonrpc": "2.0", "id": 3, "error": {"code": -32602, "message": "Security Policy Violation: Path 'C:\\Windows\\win.ini' is outside the configured sandbox"}}
    ```
 
 

@@ -53,6 +53,15 @@ _MAX_TERMINAL_CHARS = 240
 _MAX_TERMINAL_LINES = 4
 
 
+def _supports_unicode(console: Console) -> bool:
+    encoding = getattr(console.file, "encoding", None) or "utf-8"
+    try:
+        "✓".encode(encoding)
+    except (LookupError, UnicodeEncodeError):
+        return False
+    return True
+
+
 def _sanitize_terminal_text(text: str, *, max_chars: int = _MAX_TERMINAL_CHARS, max_lines: int = _MAX_TERMINAL_LINES) -> str:
     """Strip ANSI control sequences, escape Rich markup, and bound length.
 
@@ -74,10 +83,7 @@ def _sanitize_terminal_text(text: str, *, max_chars: int = _MAX_TERMINAL_CHARS, 
         text = text[:max_chars] + "[dim]…[/]"
     return text
 
-
-# ---------------------------------------------------------------------------
 # Style maps
-# ---------------------------------------------------------------------------
 
 _STATUS_STYLE = {
     "PASS": "green",
@@ -101,21 +107,14 @@ _SEV_STYLE = {
 }
 _SEVERITY_ORDER = ["critical", "high", "medium", "low"]
 
-
-# ---------------------------------------------------------------------------
 # ScanPresenter
-# ---------------------------------------------------------------------------
-
 class ScanPresenter:
     def __init__(self, console: Console | None = None) -> None:
         self.console = console or Console()
         self._progress: Progress | None = None
         self._task_id: int | None = None
 
-    # ------------------------------------------------------------------
     # Progress lifecycle
-    # ------------------------------------------------------------------
-
     def start(self, target_label: str = "Local Toy Benchmark", attack_count: int = 17, *, show_progress: bool = True) -> None:
         self.console.print()
         self.console.print("[bold cyan]Agentic Firewall[/]  [dim]Security Scan[/]")
@@ -187,9 +186,10 @@ class ScanPresenter:
         table.add_column("Protection", width=12)
         table.add_column("Duration", justify="right", width=9)
 
+        unicode_output = _supports_unicode(self.console)
         ICONS = {
-            "PASS": "✓",
-            "VULNERABLE": "✗",
+            "PASS": "✓" if unicode_output else "+",
+            "VULNERABLE": "✗" if unicode_output else "x",
             "ERROR": "!",
             "SKIPPED": "-",
             "NOT_APPLICABLE": "~",
