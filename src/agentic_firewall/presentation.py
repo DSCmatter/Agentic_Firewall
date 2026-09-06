@@ -26,14 +26,12 @@ from rich.text import Text
 
 from benchmarking.models import NormalizedAttackResult
 from agentic_firewall.services import ScanReport
+from agentic_firewall.comparison import ComparisonResult
 
 if TYPE_CHECKING:
     pass
 
-
-# ---------------------------------------------------------------------------
 # ANSI / terminal control-sequence sanitizer
-# ---------------------------------------------------------------------------
 
 # Covers:
 #   ESC [ ... m     – SGR (colour, bold, etc.)
@@ -84,7 +82,6 @@ def _sanitize_terminal_text(text: str, *, max_chars: int = _MAX_TERMINAL_CHARS, 
     return text
 
 # Style maps
-
 _STATUS_STYLE = {
     "PASS": "green",
     "VULNERABLE": "bold red",
@@ -142,9 +139,7 @@ class ScanPresenter:
             self._progress.stop()
             self._progress = None
 
-    # ------------------------------------------------------------------
     # Full interactive finish
-    # ------------------------------------------------------------------
 
     def finish(self, report: ScanReport) -> None:
         self._stop_progress()
@@ -153,10 +148,7 @@ class ScanPresenter:
         self._render_summary(report)
         self._render_next_steps(report)
 
-    # ------------------------------------------------------------------
     # Quiet finish (no header, no table; score + findings list only)
-    # ------------------------------------------------------------------
-
     def quiet_finish(self, report: ScanReport) -> None:
         self._stop_progress()
         self._render_summary(report)
@@ -173,10 +165,7 @@ class ScanPresenter:
                     f"{_sanitize_terminal_text(result.attack_name)}"
                 )
 
-    # ------------------------------------------------------------------
     # Internal rendering helpers
-    # ------------------------------------------------------------------
-
     def _render_attack_table(self, report: ScanReport) -> None:
         table = Table(show_header=True, header_style="bold", box=None, pad_edge=False, show_edge=False)
         table.add_column("", width=3)       # status icon
@@ -304,3 +293,99 @@ class ScanPresenter:
                 "Use [cyan]--format json[/] for machine-readable diagnostics."
             )
         self.console.print()
+
+
+def render_comparison(result: ComparisonResult, console: Console | None = None) -> None:
+    """Render an offline scan comparison without exposing raw report content."""
+    console = console or Console()
+    console.print("[bold cyan]Security Regression Report[/]")
+    console.print()
+
+    before_summary = result.before.summary
+    after_summary = result.after.summary
+    console.print("[bold]Score[/]")
+    console.print(f"  Before: {_comparison_score(before_summary)}")
+    console.print(f"  After:  {_comparison_score(after_summary)}")
+    delta = result.score_delta
+    console.print(f"  Delta:  {'N/A' if delta is None else f'{delta:+g}'}")
+    console.print()
+
+    console.print("[bold]Coverage[/]")
+    console.print(f"  Before: {before_summary['attack_coverage']}")
+    console.print(f"  After:  {after_summary['attack_coverage']}")
+    console.print(f"  Delta:  {result.coverage_delta:+d} applicable tests")
+    console.print()
+
+    _render_comparison_attacks(console, "New Vulnerabilities", result.new_vulnerabilities)
+    _render_comparison_attacks(console, "Resolved Vulnerabilities", result.resolved_vulnerabilities)
+    _render_comparison_attacks(console, "Unchanged Vulnerabilities", result.unchanged_vulnerabilities)
+
+    if result.severity_changes:
+        console.print("[bold]Severity Changes[/]")
+        for change in result.severity_changes:
+            console.print(
+                f"  {_sanitize_terminal_text(change['attack_name'])} (#{change['attack_id']}): "
+                f"{change['before'].upper()} -> {change['after'].upper()}"
+            )
+        console.print()
+
+    if result.status_changes:
+        console.print("[bold]Status Changes[/]")
+        for change in result.status_changes:
+            console.print(
+                f"  {_sanitize_terminal_text(change['attack_name'])} (#{change['attack_id']}): "
+                f"{change['before']} -> {change['after']}"
+            )
+        console.print()
+
+    if result.protection_source_changes:
+        console.print("[bold]Protection Source Changes[/]")
+        for change in result.protection_source_changes:
+            console.print(
+                f"  {_sanitize_terminal_text(change['attack_name'])} (#{change['attack_id']}): "
+                f"{change['before']} -> {change['after']}"
+            )
+        console.print()
+
+    special = result.to_dict()["special_statuses"]
+    for label, key in (("Errors", "errors"), ("Skipped", "skipped"), ("Not Applicable", "not_applicable")):
+        before_ids = special[key]["before"]
+        after_ids = special[key]["after"]
+        if before_ids or after_ids:
+            console.print(f"[bold]{label}[/]")
+            console.print(f"  Before: {before_ids or 'none'}")
+            console.print(f"  After:  {after_ids or 'none'}")
+            console.print()
+
+    result_style = {
+        "IMPROVED": "bold green",
+        "REGRESSED": "bold red",
+        "INCOMPLETE": "bold yellow",
+        "UNCHANGED": "bold cyan",
+    }.get(result.overall_result, "bold")
+    console.print(f"Result: [{result_style}]{result.overall_result}[/]")
+    if result.overall_result == "INCOMPLETE":
+        console.print("[yellow]One or both reports are incomplete; security conclusions are limited.[/]")
+
+
+def _comparison_score(summary: dict[str, object]) -> str:
+    if summary["score"] is None:
+        return "N/A"
+    return f"{summary['score']}/100 ({summary['grade']})"
+
+
+def _render_comparison_attacks(
+    console: Console,
+    title: str,
+    attacks: tuple[dict[str, object], ...],
+) -> None:
+    if not attacks:
+        return
+    console.print(f"[bold]{title}[/]")
+    for attack in attacks:
+        console.print(
+            f"  {str(attack['severity']).upper():<8} "
+            f"{_sanitize_terminal_text(str(attack['attack_name']))} "
+            f"(#{attack['attack_id']})"
+        )
+    console.print()

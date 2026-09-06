@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added offline comparison of saved scan reports with `agentic-firewall compare`.
+- Added Rich and machine-readable comparison output for security regressions.
+
 ## 0.1.0 - Initial public release
 
 Agentic Firewall is an installable MCP policy gateway and independent security benchmark for evaluating tool-use boundaries and data egress controls.

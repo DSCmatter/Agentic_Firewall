@@ -32,8 +32,9 @@ from pathlib import Path
 import click
 from rich.console import Console
 
+from agentic_firewall.comparison import ComparisonInputError, compare_report_files
 from agentic_firewall.mcp_target import McpTargetConfig, TargetConfigurationError
-from agentic_firewall.presentation import ScanPresenter
+from agentic_firewall.presentation import ScanPresenter, render_comparison
 from agentic_firewall.services import run_local_scan, run_mcp_target_scan
 
 
@@ -169,4 +170,31 @@ def scan(
         raise click.exceptions.Exit(1)
 
     if _fail_on_threshold_met(report, fail_on):
+        raise click.exceptions.Exit(1)
+
+
+@main.command()
+@click.argument("before", type=click.Path(path_type=Path, dir_okay=False))
+@click.argument("after", type=click.Path(path_type=Path, dir_okay=False))
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["rich", "json"]),
+    default="rich",
+    show_default=True,
+    help="Output format. 'json' emits a machine-readable comparison.",
+)
+def compare(before: Path, after: Path, output_format: str) -> None:
+    """Compare two saved schema-1.1 scan reports by stable attack_id."""
+    try:
+        result = compare_report_files(before, after)
+    except ComparisonInputError as exc:
+        raise click.UsageError(str(exc)) from exc
+
+    if output_format == "json":
+        click.echo(json.dumps(result.to_dict(), indent=2))
+    else:
+        render_comparison(result, Console())
+
+    if result.overall_result in {"REGRESSED", "INCOMPLETE"}:
         raise click.exceptions.Exit(1)

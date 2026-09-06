@@ -20,10 +20,7 @@ from agentic_firewall.scoring import calculate_security_score
 from agentic_firewall.services import ScanReport
 
 
-# ---------------------------------------------------------------------------
 # Helpers
-# ---------------------------------------------------------------------------
-
 def make_result(
     attack_id: int = 1,
     status: str = "PASS",
@@ -62,10 +59,7 @@ def capture_finish(report: ScanReport, method: str = "finish") -> str:
     return buf.getvalue()
 
 
-# ---------------------------------------------------------------------------
 # 1–6: Sanitization
-# ---------------------------------------------------------------------------
-
 def test_sanitize_strips_ansi_csi_sequences():
     out = _sanitize_terminal_text("\x1b[31mred text\x1b[0m")
     assert "\x1b" not in out
@@ -123,10 +117,7 @@ def test_finish_uses_ascii_icons_for_legacy_terminal_encoding():
     assert "✓" not in stream.getvalue()
 
 
-# ---------------------------------------------------------------------------
 # 7–8: quiet_finish
-# ---------------------------------------------------------------------------
-
 def test_quiet_finish_all_pass():
     results = [make_result(i, "PASS", "high", "FIREWALL") for i in range(1, 18)]
     report = make_report(results)
@@ -148,10 +139,7 @@ def test_quiet_finish_shows_findings_list():
     assert "Protection" not in out
 
 
-# ---------------------------------------------------------------------------
 # 9–12: finish() rendering
-# ---------------------------------------------------------------------------
-
 def test_finish_no_findings_panel_on_clean_pass():
     results = [make_result(i, "PASS", "high", "FIREWALL") for i in range(1, 18)]
     report = make_report(results)
@@ -191,10 +179,7 @@ def test_finish_partial_coverage_note():
     assert "does not expose the required tools" in out
 
 
-# ---------------------------------------------------------------------------
 # 13–15: JSON output contract
-# ---------------------------------------------------------------------------
-
 def test_json_stdout_is_clean_json():
     runner = CliRunner()
     result = runner.invoke(main, ["scan", "--format", "json"])
@@ -238,10 +223,7 @@ def test_schema_version_is_1_1():
     assert data["schema_version"] == "1.1"
 
 
-# ---------------------------------------------------------------------------
 # 16–20: Exit codes and --fail-on
-# ---------------------------------------------------------------------------
-
 def test_fail_on_critical_exits_1_when_critical_found():
     from agentic_firewall.cli import _fail_on_threshold_met
     results = [make_result(1, "VULNERABLE", "critical", "NONE")]
@@ -276,10 +258,7 @@ def test_infrastructure_error_exits_1():
     assert result.exit_code == 1
 
 
-# ---------------------------------------------------------------------------
 # 21–23: Remediation correctness
-# ---------------------------------------------------------------------------
-
 def test_remediation_only_on_vulnerable():
     from benchmarking.normalizer import normalize_protected_result
     from benchmarking.models import AttackObservation
@@ -331,10 +310,7 @@ def test_remediation_present_in_json_for_vulnerable():
     assert len(vuln_json["remediation"]) > 10
 
 
-# ---------------------------------------------------------------------------
 # 24: JSON preserves full evidence while terminal truncates
-# ---------------------------------------------------------------------------
-
 def test_json_preserves_full_evidence_while_terminal_truncates():
     """100 KB evidence is preserved verbatim in JSON but bounded in terminal output."""
     big_evidence_value = "X" * 100_000
@@ -354,9 +330,6 @@ def test_json_preserves_full_evidence_while_terminal_truncates():
     assert json_evidence == big_evidence_value
 
 
-# ---------------------------------------------------------------------------
 # 25: attack_metadata completeness
-# ---------------------------------------------------------------------------
-
 def test_attack_metadata_covers_all_17_attacks():
     assert set(ATTACK_METADATA.keys()) == set(range(1, 18))

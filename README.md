@@ -151,6 +151,22 @@ The `scan` subcommand runs the 17-attack benchmark against either the built-in t
 | `--quiet` / `-q` | Compact output: score, coverage, vulnerabilities only. No header, no per-attack table. |
 | `--fail-on <critical\|high\|medium\|low>` | Cumulative severity gate. Exits `1` if any vulnerability at or above the threshold is found. Default: no gate (exit `0` even with findings). |
 
+### Compare saved scans
+
+Compare two saved schema-1.1 reports without contacting an MCP server:
+
+```bash
+agentic-firewall compare before.json after.json
+agentic-firewall compare before.json after.json --format json
+```
+
+Reports are matched by stable `attack_id` values. The comparison includes score
+and coverage deltas, new/resolved/unchanged vulnerabilities, severity and status
+changes, protection-source changes, and error/skipped/not-applicable sets.
+Comparison JSON uses schema `1.0`, independently of the scan report schema.
+The command exits `1` for `REGRESSED` or `INCOMPLETE`, `0` for `IMPROVED` or
+`UNCHANGED`, and `2` for invalid or incompatible report inputs.
+
 ### Exit Codes
 
 | Code | Meaning |
