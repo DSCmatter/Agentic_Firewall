@@ -367,6 +367,110 @@ Run the OWASP attack harness comparing baseline and protected servers:
 uv run agentic-firewall
 ```
 
+### CI Integration
+
+Agentic Firewall is designed for CI/CD pipelines without requiring a SaaS backend, GitHub App, or interactive configuration. Use the CLI flags to define security gates and deterministic output.
+
+#### GitHub Actions Example
+
+Add this workflow to `.github/workflows/mcp-security.yml`:
+
+```yaml
+name: MCP Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: latest
+      
+      - name: Install dependencies
+        run: uv sync
+      
+      # Scan the built-in benchmark (no MCP server required)
+      - name: Agentic Firewall Security Scan
+        run: uv run agentic-firewall scan --no-progress --format json --output scan-report.json --fail-on high
+      
+      # Optional: scan a third-party MCP server
+      # - name: Scan Custom MCP Server
+      #   run: uv run agentic-firewall scan --server-url http://localhost:8000 --no-progress --format json --fail-on high
+      
+      # Optional: save scan report as artifact
+      - name: Upload scan report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agentic-firewall-report
+          path: scan-report.json
+      
+      # Optional: compare against baseline scan
+      # - name: Compare against baseline
+      #   run: uv run agentic-firewall compare baseline.json scan-report.json --format json
+```
+
+#### CLI Flags for CI
+
+| Flag | Purpose |
+|---|---|
+| `--no-progress` | Suppresses animated progress bar. Required for non-interactive / CI environments. |
+| `--format json` | Emits pure JSON to stdout (progress/warnings to stderr). Suitable for logging and artifact storage. |
+| `--output <path>` | Persists JSON report to file for artifact storage and future comparisons. |
+| `--fail-on <severity>` | CI security gate: exits `1` if any VULNERABLE finding at or above the severity threshold is found. Cumulative: `--fail-on high` also fails on CRITICAL. |
+| `--quiet` | Alternative to `--format json` if text output is acceptable; shows only score, coverage, and findings. |
+
+#### Exit Codes in CI
+
+The scanner returns deterministic exit codes:
+
+- **0**: Scan completed successfully and no CI security gate was triggered.
+- **1**: Infrastructure error (attack encountered ERROR status) OR security gate threshold was met.
+- **2**: Usage / configuration error (bad target URL, missing argument).
+
+#### Example CI Configurations
+
+**Fail on HIGH or CRITICAL vulnerabilities:**
+```bash
+uv run agentic-firewall scan --no-progress --format json --fail-on high
+```
+
+**Fail on any vulnerability:**
+```bash
+uv run agentic-firewall scan --no-progress --format json --fail-on low
+```
+
+**Scan with no gate (exit 0 even if vulnerabilities are found):**
+```bash
+uv run agentic-firewall scan --no-progress --format json
+```
+
+**Scan a remote MCP server:**
+```bash
+uv run agentic-firewall scan --server-url http://mcp-server:8000 --no-progress --format json --fail-on high
+```
+
+**Scan a local stdio MCP server:**
+```bash
+uv run agentic-firewall scan --server-cmd '["python", "my_mcp_server.py"]' --no-progress --format json --fail-on high
+```
+
+#### CI Best Practices
+
+1. **Always use `--no-progress`** in CI pipelines to avoid unnecessary terminal escape sequences.
+2. **Use `--format json`** for machine-readable reports suitable for artifact storage and diffing.
+3. **Set `--fail-on` to match your security policy** (e.g., `--fail-on high` for strict security posture).
+4. **Save the JSON report as an artifact** for trend analysis and historical comparison.
+5. **Compare reports over time** using `agentic-firewall compare baseline.json current.json --format json` to detect regressions.
+
 ---
 
 ## 6. Manual Testing & Verification
