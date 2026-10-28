@@ -1,5 +1,7 @@
 # Agentic Firewall
 
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/agentic-firewall?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/agentic-firewall)
+
 **MCP security middleware + automated security testing for AI agents.**
 
 Agentic Firewall sits between an AI agent or MCP client and an MCP server. It
